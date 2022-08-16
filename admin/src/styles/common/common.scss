@@ -1,0 +1,16 @@
+@mixin headings($size){
+    font-size: $size;
+    font-family: 'Montserrat', sans-serif;
+    color:rgb(186, 186, 186);
+    font-weight: 500;
+}
+@mixin input1{
+    background-color: transparent;
+    border: 1px solid #404656;
+    width:300px;
+    padding:10px 20px;
+    color: rgb(205, 205, 205);   
+    border-radius: 4px;
+    outline: none;
+    
+}

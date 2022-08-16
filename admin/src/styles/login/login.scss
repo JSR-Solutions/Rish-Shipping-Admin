@@ -1,0 +1,85 @@
+$back-color:#161D31;
+$light_back:#283046;
+@import "../common/common.scss";
+.login_main{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $back-color;
+    height: 100vh;
+    overflow: hidden;
+}
+.left_login{
+    flex:0.5;
+}
+.login_img{
+    height: 90vh;
+    object-fit: contain;
+    object-position: center;
+}
+.right_login{
+    flex:0.5;
+
+    padding:100px 80px;
+    text-align: left;
+    position: relative;
+    z-index: 3;
+    background-color: $light_back;
+    height: 100vh;
+    h3{
+        @include headings(28px);
+        margin-top: 140px;
+        margin-bottom: 10px;
+    }
+    h6{
+        @include headings(12px);
+        margin-bottom: 10px;
+    }
+    p{
+        @include headings(16px);
+        margin-bottom: 60px;
+    }
+    .input_fieldDiv{
+        margin-bottom: 30px;
+        position: relative;
+        h5{
+            position: absolute;
+            font-size: 12px;
+            color: #7367F0;
+            top:5px;
+            right:10px;
+            font-family: 'Montserrat', sans-serif;  
+            font-weight: 500;
+            cursor: pointer;
+
+        }
+    }
+    .input_field{
+        @include input1;
+    }
+    .input_field:focus{
+        outline: none !important;
+        border:1px solid #5E50EE;
+    }
+    .input_field:focus::placeholder{
+        color: transparent;
+    }
+    ::placeholder{
+        color: rgb(161, 161, 161);
+    }
+}
+.signin_btn{
+    background-color: #7367F0;
+    padding:11px 21px;
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+    border: 1px solid #7367F0;
+    border-radius: 4px;
+    font-size: 16px;
+    width:345px;
+    margin-top: 50px;
+}
+.signin_btn:hover{
+    box-shadow: 0 3px 10px #7367F0;
+    cursor: pointer;
+}
