@@ -2,14 +2,138 @@
   display: flex;
   height: 100vh;
   width: 100%;
+  font-family: "Montserrat";
 }
 
 .dashboard-sidebar {
   width: max-content;
   padding: 20px;
+  transition: 0.2s ease;
 }
 
 .dashboard-content {
   width: 100%;
+  overflow-y: none;
   background-color: #283046;
+  padding: 40px;
+}
+
+.dashboard-row-one,
+.dashboard-row-two {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px;
+  height: 43vh;
+}
+
+.dashboard-shippers-div {
+  width: 60%;
+  background-color: white;
+  margin-right: 16px;
+  border-radius: 12px;
+}
+
+.dashboard-companies-div {
+  width: 40%;
+  border-radius: 12px;
+  background-color: white;
+}
+
+.dashboard-bookings-div {
+  border-radius: 12px;
+  background-color: white;
+  width: 100%;
+}
+
+.header-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.header-div h3 {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.header-div button {
+  color: white;
+  background-color: #283046;
+  border: 1px solid #283046;
+  width: 20%;
+  padding: 8px;
+  font-size: 16px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+
+.header-div button:hover {
+  cursor: pointer;
+  background-color: #536391;
+  border-color: #536391;
+}
+
+.content-div {
+  height: 85%;
+  border-radius: 12px;
+}
+
+.content-items {
+  overflow-y: scroll;
+  height: 88%;
+}
+
+.content-header {
+  display: flex;
+  border-bottom: 0.4px solid rgba(0, 0, 0, 0.35);
+}
+
+.content-header div {
+  flex: 1;
+  padding: 8px;
+  text-align: left;
+  /* border-right: 0.4px solid rgba(0, 0, 0, 0.35); */
+}
+
+.content-header div:last-child {
+  border-right: none;
+  text-align: center;
+}
+
+.content-item {
+  margin-bottom: 4px;
+  padding: 8px;
+  display: flex;
+}
+
+.content-item div {
+  flex: 1;
+  padding: 8px;
+  text-align: left;
+}
+
+.content-item div:last-child {
+  text-align: center;
+}
+
+.content-item button {
+  width: 50%;
+  margin-left: 16px;
+  background-color: #5bb318;
+  padding: 8px;
+  font-family: "Montserrat";
+  color: white;
+  font-weight: bolder;
+  border: none !important;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+.content-item button:hover {
+  background-color: #519b18;
+  cursor: pointer;
 }
