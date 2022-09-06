@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Img from "../../Assets/signin.png";
 import "../../styles/login/login.css";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { useNavigate } from "react-router-dom";
 
