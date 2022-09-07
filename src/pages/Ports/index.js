@@ -45,7 +45,7 @@ const Ports = () => {
             return (
               <div
                 style={
-                  ind % 2 == 0
+                  ind % 2 === 0
                     ? { backgroundColor: "white" }
                     : { backgroundColor: "#efefef" }
                 }
