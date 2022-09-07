@@ -24,6 +24,7 @@
   justify-content: space-between;
   margin: 16px;
   height: 43vh;
+  overflow-y: hidden !important;
 }
 
 .dashboard-shippers-div {
@@ -78,13 +79,13 @@
 }
 
 .content-div {
-  height: 85%;
+  height: 75%;
   border-radius: 12px;
 }
 
 .content-items {
   overflow-y: scroll;
-  height: 88%;
+  height: 83%;
 }
 
 .content-header {

@@ -1,6 +1,6 @@
 import React from "react";
 import SideBar from "../../SharedComponents/SideBar";
-import "../../styles/dashboard/dashboard.css";
+import "./dashboard.css";
 
 function dashboard() {
   const arr = [
