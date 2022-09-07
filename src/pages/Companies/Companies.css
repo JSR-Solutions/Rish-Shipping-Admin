@@ -1,0 +1,151 @@
+.companys-parent-div {
+  height: 100vh;
+  width: 100%;
+  background-color: #283046;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  font-family: "Montserrat";
+}
+
+/* ACTIONS DIV STYLING */
+
+.companys-actions-div,
+.companys-list-div {
+  background-color: white;
+  padding: 12px;
+  width: 95%;
+  border-radius: 8px;
+  margin: 8px;
+  display: flex;
+}
+
+.search-div {
+  flex: 2 !important;
+}
+
+.companys-actions-div div {
+  flex: 1;
+  display: flex;
+}
+
+.search-div input {
+  margin-right: 12px;
+  font-family: "Montserrat";
+  width: 60%;
+  padding: 6px;
+  border: 0.05px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.companys-actions-div button {
+  color: white;
+  background-color: #283046;
+  border: 1px solid #283046;
+  width: 30%;
+  padding: 10px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+.companys-actions-div button:hover {
+  cursor: pointer;
+  background-color: #536391;
+  border-color: #536391;
+}
+
+.sort-div {
+  flex: 2 !important;
+  display: flex;
+  justify-content: space-around;
+}
+
+.add-company-div {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-company-div button {
+  width: 50%;
+  background-color: #5bb318;
+  border: none;
+}
+
+.add-company-div button:hover {
+  background-color: #519b18;
+}
+
+/* LIST STYLING */
+
+.companys-list-div {
+  flex-direction: column;
+}
+
+.companys-list-header {
+  display: flex;
+  width: 100%;
+  text-align: left;
+  padding: 2px;
+  padding-bottom: 8px;
+  border-bottom: 0.1px solid rgba(0, 0, 0, 0.2);
+}
+
+.companys-list-header div {
+  flex: 1;
+  margin-left: 10px;
+  border-right: 0.2px solid rgba(0, 0, 0, 0.3);
+}
+
+.companys-list-header div:last-child {
+  border: none;
+}
+
+.companys-list-items-div {
+  height: 80vh;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.companys-list-item {
+  display: flex;
+  text-align: left;
+  padding: 8px;
+  margin: 4px;
+}
+
+.companys-list-item div {
+  flex: 1;
+}
+
+.company-view-btn,
+.company-delete-btn {
+  width: 90%;
+  margin-left: 5%;
+  border: none;
+  padding: 8px;
+  color: white;
+  font-family: "Montserrat";
+  font-weight: bold;
+  font-size: 16px;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.company-view-btn {
+  background-color: #5bb318;
+}
+
+.company-view-btn:hover {
+  background-color: #519b18;
+}
+
+.company-delete-btn {
+  background-color: #ff4a4a;
+}
+
+.company-delete-btn:hover {
+  background-color: #aa1d1d;
+}
