@@ -81,9 +81,14 @@
   transition: 0.2s ease;
 }
 
+.sidebar-link {
+  color: black;
+  text-decoration: none !important;
+}
+
 .sidebar-menu-item.active {
   background-color: #283046;
-  color: white;
+  color: white !important;
   border-color: #283046 !important;
   font-weight: bolder;
 }
@@ -91,7 +96,7 @@
 .sidebar-menu-item:hover {
   cursor: pointer;
   background-color: #536391;
-  color: white;
+  color: white !important;
   border-color: #536391;
 }
 

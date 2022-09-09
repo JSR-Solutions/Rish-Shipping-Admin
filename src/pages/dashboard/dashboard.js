@@ -9,9 +9,6 @@ function dashboard() {
   ];
   return (
     <div className="dashboard-main">
-      <div className="dashboard-sidebar">
-        <SideBar />
-      </div>
       <div className="dashboard-content">
         <div className="dashboard-row-one">
           <div className="dashboard-shippers-div">
