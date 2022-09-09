@@ -34,7 +34,7 @@ function Login() {
         autoClose: 2000,
       });
       reactLocalStorage.set("rish-admin-token", response.data.data.token);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       toast.error(error.response.data.message, {
         position: "bottom-center",

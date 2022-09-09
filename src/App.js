@@ -1,3 +1,4 @@
+import Admin from "./pages/Admin";
 import Login from "./pages/login/login";
 import Ports from "./pages/Ports";
 import Bookings from "./pages/Bookings";
@@ -16,11 +17,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/ports" element={<Ports />} />
-          <Route path="/bookings" element={<Bookings />} />
-          <Route path="/companies" element={<Company />} />
-          <Route path="/shippers" element={<Shippers />} />
+          <Route path="" element={<Admin />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/shippers" element={<Shippers />} />
+            <Route path="/ports" element={<Ports />} />
+            <Route path="/bookings" element={<Bookings />} />
+            <Route path="/companies" element={<Company />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
