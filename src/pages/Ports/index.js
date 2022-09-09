@@ -1,10 +1,16 @@
-import React from "react";
+import axios from "axios";
+import React,{useEffect,useState} from "react";
 import "./Ports.css";
+
 
 const Ports = () => {
   const arr = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 8, 91, 1, 2, 2, 3, 1, 4, 56,
   ];
+
+  const[ports,setPorts]=useState([]);
+
+ 
 
   return (
     <div className="ports-parent-div">
