@@ -1,12 +1,23 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import SideBar from "../../SharedComponents/SideBar";
 import "./dashboard.css";
-
-function dashboard() {
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+function Dashboard() {
   const arr = [
     1, 2, 3, 4, 5, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ];
+  const [allShippers,setAllShippers]=useState([]);
+
+  useEffect(()=>{
+    axios.get("http://localhost:8000/admin/api/shippers/all").then((res)=>{
+      console.log(res.data);
+      setAllShippers(res.data.data);
+    })
+  },[]);
+  let navigate=useNavigate();
+
   return (
     <div className="dashboard-main">
       <div className="dashboard-sidebar">
@@ -61,7 +72,7 @@ function dashboard() {
           <div className="dashboard-companies-div">
             <div className="header-div">
               <h3>All Shippers</h3>
-              <button>VIEW ALL</button>
+              <button onClick={()=>navigate("/shippers")}>VIEW ALL</button>
             </div>
             <div className="content-div">
               <div className="content-header">
@@ -79,7 +90,7 @@ function dashboard() {
                 </div>
               </div>
               <div className="content-items">
-                {arr.map((a, index) => {
+                {allShippers.map((a, index) => {
                   return (
                     <div
                       key={index}
@@ -90,8 +101,8 @@ function dashboard() {
                       }
                       className="content-item"
                     >
-                      <div>Akash Shipping</div>
-                      <div>22 Aug, 2022</div>
+                      <div>{a.name}</div>
+                      <div>{a.createdAt.substring(0,10)}</div>
                       <div>33</div>
                       <div>
                         <button>VIEW</button>
@@ -158,4 +169,4 @@ function dashboard() {
   );
 }
 
-export default dashboard;
+export default Dashboard;
