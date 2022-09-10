@@ -13,10 +13,10 @@ const Shippers = () => {
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
-  const [isSortedByDate,setIsSortedByDate]=useState(false);
+  const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
-  const [reload,setReload]=useState(false);
+  const [reload, setReload] = useState(false);
   const [addModal, setAddModal] = useState(false);
   useEffect(() => {
     axios.get("http://localhost:8000/admin/api/shippers/all").then((res) => {
@@ -79,25 +79,27 @@ const Shippers = () => {
     e.preventDefault();
     console.log("sorting");
     let temparr = [...allShippers];
-    temparr.sort((a, b) => 
-     isSortedByName? b.name.toString().localeCompare(a.name.toString()):
-    a.name.toString().localeCompare(b.name.toString()));
+    temparr.sort((a, b) =>
+      isSortedByName
+        ? b.name.toString().localeCompare(a.name.toString())
+        : a.name.toString().localeCompare(b.name.toString())
+    );
     setAllShippers(temparr);
     setIsSortedByName(!isSortedByName);
   }
 
-   function sortByDate(e) {
-     e.preventDefault();
-     console.log("sorting");
-     let temparr = [...allShippers];
-     temparr.sort((a, b) =>
-       isSortedByDate
-         ? new Date(a.createdAt) - new Date(b.createdAt)
-         : new Date(b.createdAt) - new Date(a.createdAt)
-     );
-     setIsSortedByDate(!isSortedByDate);
-     setAllShippers(temparr);
-   }
+  function sortByDate(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...allShippers];
+    temparr.sort((a, b) =>
+      isSortedByDate
+        ? new Date(a.createdAt) - new Date(b.createdAt)
+        : new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    setIsSortedByDate(!isSortedByDate);
+    setAllShippers(temparr);
+  }
 
   function addShipper() {
     axios
@@ -119,7 +121,9 @@ const Shippers = () => {
     console.log(id);
     axios
       .delete("http://localhost:8000/admin/api/shippers/", {
-        shipperId: id,
+        data: {
+          shipperId: id,
+        },
       })
       .then((res) => {
         console.log("Shipper deleted");
@@ -166,9 +170,9 @@ const Shippers = () => {
           <button>Search</button>
         </div>
         <div className="sort-div">
-          <button onClick={(e)=>sortByName(e)}>Sort By Name</button>
-          <button onClick={(e)=>sortByDate(e)}>Sort By Date Added</button>
-          <button onClick={()=>setReload(!reload)}>Reload</button>
+          <button onClick={(e) => sortByName(e)}>Sort By Name</button>
+          <button onClick={(e) => sortByDate(e)}>Sort By Date Added</button>
+          <button onClick={() => setReload(!reload)}>Reload</button>
         </div>
         <div className="add-shipper-div">
           <button onClick={() => setAddModal(true)}>Add New Shipper</button>
