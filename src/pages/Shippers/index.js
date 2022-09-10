@@ -12,14 +12,18 @@ const Shippers = () => {
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
+  const [searchVal, setSearchVal] = useState("");
+  const [isSortedByDate,setIsSortedByDate]=useState(false);
+  const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
+  const [reload,setReload]=useState(false);
   const [addModal, setAddModal] = useState(false);
   useEffect(() => {
     axios.get("http://localhost:8000/admin/api/shippers/all").then((res) => {
       console.log(res.data);
       setAllShippers(res.data.data);
     });
-  }, []);
+  }, [reload]);
 
   function handleClose() {
     setShow(false);
@@ -57,6 +61,9 @@ const Shippers = () => {
     if (name === "contact") {
       setContact(value);
     }
+    if (name === "search") {
+      setSearchVal(value);
+    }
     if (name === "email") {
       setEmail(value);
     }
@@ -67,6 +74,30 @@ const Shippers = () => {
       setWebsite(value);
     }
   }
+
+  function sortByName(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...allShippers];
+    temparr.sort((a, b) => 
+     isSortedByName? b.name.toString().localeCompare(a.name.toString()):
+    a.name.toString().localeCompare(b.name.toString()));
+    setAllShippers(temparr);
+    setIsSortedByName(!isSortedByName);
+  }
+
+   function sortByDate(e) {
+     e.preventDefault();
+     console.log("sorting");
+     let temparr = [...allShippers];
+     temparr.sort((a, b) =>
+       isSortedByDate
+         ? new Date(a.createdAt) - new Date(b.createdAt)
+         : new Date(b.createdAt) - new Date(a.createdAt)
+     );
+     setIsSortedByDate(!isSortedByDate);
+     setAllShippers(temparr);
+   }
 
   function addShipper() {
     axios
@@ -81,9 +112,24 @@ const Shippers = () => {
         setAllShippers((e) => [...e, res.data.data]);
         console.log("New Shipper Added");
       });
-      handleAddClose();
+    handleAddClose();
   }
 
+  function DeleteShipper(id) {
+    console.log(id);
+    axios
+      .delete("http://localhost:8000/admin/api/shippers/", {
+        shipperId: id,
+      })
+      .then((res) => {
+        console.log("Shipper deleted");
+        let b = allShippers.findIndex((a) => a.id === id);
+        var temparr = [...allShippers];
+        temparr.splice(b, 1);
+        setAllShippers(temparr);
+        handleClose();
+      });
+  }
   function EditShipper(id) {
     axios
       .patch(`http://localhost:8000/admin/api/shippers/`, {
@@ -110,13 +156,19 @@ const Shippers = () => {
     <div className="shippers-parent-div">
       <div className="shippers-actions-div">
         <div className="search-div">
-          <input type="text" placeholder="Search Shippers" />
+          <input
+            type="text"
+            placeholder="Search Shippers"
+            onChange={handleChange}
+            name="search"
+            value={searchVal}
+          />
           <button>Search</button>
         </div>
         <div className="sort-div">
-          <button>Sort By Name</button>
-          <button>Sort By Date Added</button>
-          <button>Reload</button>
+          <button onClick={(e)=>sortByName(e)}>Sort By Name</button>
+          <button onClick={(e)=>sortByDate(e)}>Sort By Date Added</button>
+          <button onClick={()=>setReload(!reload)}>Reload</button>
         </div>
         <div className="add-shipper-div">
           <button onClick={() => setAddModal(true)}>Add New Shipper</button>
@@ -166,9 +218,9 @@ const Shippers = () => {
                   name="website"
                 />
                 <div className="add_btn">
-                <button type="button" onClick={() => addShipper()}>
-                  Add
-                </button>
+                  <button type="button" onClick={() => addShipper()}>
+                    Add
+                  </button>
                 </div>
               </div>
             </Form>
@@ -261,9 +313,19 @@ const Shippers = () => {
                           name="website"
                         />
                         <div className="add_btn">
-                        <button type="button" onClick={() => EditShipper(a.id)}>
-                          Edit
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => EditShipper(a.id)}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="delete_btn"
+                            type="button"
+                            onClick={() => DeleteShipper(a.id)}
+                          >
+                            Delete
+                          </button>
                         </div>
                       </Form>
                     </div>
