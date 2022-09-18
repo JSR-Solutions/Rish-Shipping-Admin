@@ -3,9 +3,6 @@ import "./Shippers.css";
 import axios from "axios";
 import { Modal, Form } from "react-bootstrap";
 const Shippers = () => {
-  const arr = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 8, 91, 1, 2, 2, 3, 1, 4, 56,
-  ];
   const [allShippers, setAllShippers] = useState([]);
   const [show, setShow] = useState(false);
   const [companyName, setCompanyName] = useState("");
@@ -81,7 +78,7 @@ const Shippers = () => {
         setAllShippers((e) => [...e, res.data.data]);
         console.log("New Shipper Added");
       });
-      handleAddClose();
+    handleAddClose();
   }
 
   function EditShipper(id) {
@@ -98,7 +95,7 @@ const Shippers = () => {
         console.log("Shipper Updated Successfully");
         if (res.data) {
           let temparr = [...allShippers];
-          let updateIndex = temparr.findIndex((abc) => abc.id == id);
+          let updateIndex = temparr.findIndex((abc) => abc.id === id);
           temparr[updateIndex] = res.data.data;
           setAllShippers(temparr);
         }
@@ -166,9 +163,9 @@ const Shippers = () => {
                   name="website"
                 />
                 <div className="add_btn">
-                <button type="button" onClick={() => addShipper()}>
-                  Add
-                </button>
+                  <button type="button" onClick={() => addShipper()}>
+                    Add
+                  </button>
                 </div>
               </div>
             </Form>
@@ -261,9 +258,12 @@ const Shippers = () => {
                           name="website"
                         />
                         <div className="add_btn">
-                        <button type="button" onClick={() => EditShipper(a.id)}>
-                          Edit
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => EditShipper(a.id)}
+                          >
+                            Edit
+                          </button>
                         </div>
                       </Form>
                     </div>

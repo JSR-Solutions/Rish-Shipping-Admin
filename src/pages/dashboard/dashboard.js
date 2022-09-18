@@ -1,5 +1,4 @@
-import React,{useEffect,useState} from "react";
-import SideBar from "../../SharedComponents/SideBar";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,15 +7,15 @@ function Dashboard() {
     1, 2, 3, 4, 5, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ];
-  const [allShippers,setAllShippers]=useState([]);
+  const [allShippers, setAllShippers] = useState([]);
 
-  useEffect(()=>{
-    axios.get("http://localhost:8000/admin/api/shippers/all").then((res)=>{
+  useEffect(() => {
+    axios.get("http://localhost:8000/admin/api/shippers/all").then((res) => {
       console.log(res.data);
       setAllShippers(res.data.data);
-    })
-  },[]);
-  let navigate=useNavigate();
+    });
+  }, []);
+  let navigate = useNavigate();
 
   return (
     <div className="dashboard-main">
@@ -69,7 +68,7 @@ function Dashboard() {
           <div className="dashboard-companies-div">
             <div className="header-div">
               <h3>All Shippers</h3>
-              <button onClick={()=>navigate("/shippers")}>VIEW ALL</button>
+              <button onClick={() => navigate("/shippers")}>VIEW ALL</button>
             </div>
             <div className="content-div">
               <div className="content-header">
@@ -99,7 +98,7 @@ function Dashboard() {
                       className="content-item"
                     >
                       <div>{a.name}</div>
-                      <div>{a.createdAt.substring(0,10)}</div>
+                      <div>{a.createdAt.substring(0, 10)}</div>
                       <div>33</div>
                       <div>
                         <button>VIEW</button>
