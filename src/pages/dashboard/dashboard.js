@@ -8,13 +8,38 @@ function Dashboard() {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ];
   const [allShippers, setAllShippers] = useState([]);
+  const [unverifiedCompanies, setUnverifiedCompanies] = useState([]);
+  const [bookingRequests, setBookingRequests] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/admin/api/shippers/all").then((res) => {
-      console.log(res.data);
-      setAllShippers(res.data.data);
-    });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const shippersResponse = await axios.get(
+        "http://localhost:8000/admin/api/shippers/all"
+      );
+      setAllShippers(shippersResponse.data.data);
+
+      const unverifiedCompanyResponse = await axios.get(
+        "http://localhost:8000/admin/api/company/unverified"
+      );
+      setUnverifiedCompanies(unverifiedCompanyResponse.data.data);
+
+      const bookingResponse = await axios({
+        method: "POST",
+        url: "http://localhost:8000/admin/api/booking/",
+        data: {
+          status: "Pending",
+        },
+      });
+      setBookingRequests(bookingResponse.data.data);
+    } catch (error) {
+      console.log(`ERROR : ${JSON.stringify(error)}`);
+    }
+  };
+
   let navigate = useNavigate();
 
   return (
@@ -42,7 +67,7 @@ function Dashboard() {
                 </div>
               </div>
               <div className="content-items">
-                {arr.map((a, index) => {
+                {unverifiedCompanies.map((company, index) => {
                   return (
                     <div
                       key={index}
@@ -53,9 +78,9 @@ function Dashboard() {
                       }
                       className="content-item"
                     >
-                      <div>Akash Shipping</div>
-                      <div>22 Aug, 2022</div>
-                      <div>2 Documents Uploaded</div>
+                      <div>{company.name}</div>
+                      <div>{company.createdAt.substring(0, 10)}</div>
+                      <div>{company.documents.length} Documents Uploaded</div>
                       <div>
                         <button>VERIFY</button>
                       </div>
@@ -135,7 +160,7 @@ function Dashboard() {
                 </div>
               </div>
               <div className="content-items">
-                {arr.map((a, index) => {
+                {bookingRequests.map((bookingRequest, index) => {
                   return (
                     <div
                       key={index}
@@ -146,10 +171,16 @@ function Dashboard() {
                       }
                       className="content-item"
                     >
-                      <div>Akash Shipping</div>
-                      <div>22 Aug, 2022</div>
-                      <div>Hambantota</div>
-                      <div>Chicago</div>
+                      <div>{bookingRequest.clientCompany.name}</div>
+                      <div>{bookingRequest.createdAt.substring(0, 10)}</div>
+                      <div>
+                        {bookingRequest.sourcePort.name},{" "}
+                        {bookingRequest.sourcePort.country}
+                      </div>
+                      <div>
+                        {bookingRequest.destinationPort.name},{" "}
+                        {bookingRequest.destinationPort.country}
+                      </div>
                       <div>
                         <button>VIEW</button>
                       </div>
