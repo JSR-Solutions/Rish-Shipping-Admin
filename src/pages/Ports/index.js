@@ -1,13 +1,49 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Modal, Form } from "react-bootstrap";
+
 import "./Ports.css";
 
 const Ports = () => {
   const arr = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 8, 91, 1, 2, 2, 3, 1, 4, 56,
   ];
-
+  const [name, setName] = useState("");
+  const [country, setCountry] = useState("");
   const [ports, setPorts] = useState([]);
+  const [show, setShow] = useState(false);
+
+  function addPort() {
+    axios
+      .post("http://localhost:8000/admin/api/ports", {
+        name: name,
+        country: country,
+      })
+      .then((res) => {
+        setPorts((e) => [...e, res.data.data]);
+        console.log("Port Added");
+      });
+    handleClose();
+  }
+
+  function handleShow() {
+    setShow(true);
+  }
+
+  function handleClose() {
+    setShow(false);
+  }
+  
+  function handleChange(e) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    if (name === "name") {
+      setName(value);
+    }
+    if (name === "country") {
+      setCountry(value);
+    }
+  }
 
   return (
     <div className="ports-parent-div">
@@ -22,9 +58,42 @@ const Ports = () => {
           <button>Reload</button>
         </div>
         <div className="add-port-div">
-          <button>Add New Port</button>
+          <button onClick={handleShow}>Add New Port</button>
         </div>
       </div>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <h3>Add New Port</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form>
+              <div style={{ padding: "20px" }}>
+                <Form.Label>Port Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  value={name}
+                  name="name"
+                />
+                <Form.Label>Country</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  value={country}
+                  name="country"
+                />
+
+                <div className="add_btn">
+                  <button type="button" onClick={() => addPort()}>
+                    Add
+                  </button>
+                </div>
+              </div>
+            </Form>
+          </div>
+        </Modal.Body>
+      </Modal>
       <div className="ports-list-div">
         <div className="ports-list-header">
           <div>

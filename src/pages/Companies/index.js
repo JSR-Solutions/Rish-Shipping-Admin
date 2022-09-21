@@ -1,11 +1,19 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect,useState } from "react";
 import "./Companies.css";
 
 const Company = () => {
   const arr = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 8, 91, 1, 2, 2, 3, 1, 4, 56,
   ];
+  const [companies,setCompanies]=useState([]);
 
+  useEffect(()=>{
+    axios.get("http://localhost:8000/admin/api/company/all-business").then((res)=>{
+      setCompanies(res.data.data);
+      console.log(res.data.data);
+    });
+  })
   return (
     <div className="companys-parent-div">
       <div className="companys-actions-div">
