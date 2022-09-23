@@ -1,15 +1,100 @@
 import React, { useEffect, useState } from "react";
-import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { Row, Col } from "react-bootstrap";
+import { BsDownload } from "react-icons/bs";
+
+import "./dashboard.css";
+
+function ViewCompanyDetailsModal(props) {
+  const { company } = props;
+
+  useEffect(() => {
+    console.log(props && props.company && props.company);
+  }, [props]);
+
+  return (
+    <Modal
+      {...props}
+      size="xl"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {company && company.name}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <center>
+          <h4>Company Details</h4>
+        </center>
+        <br />
+        <Row>
+          <Col>
+            <h5>Basic Info</h5>
+            <br />
+            <Row>
+              <Col lg={5}>Name : </Col>
+              <Col>
+                <b>{company && company.name}</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={5}>Email : </Col>
+              <Col>
+                <b>{company && company.email}</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={5}>Type : </Col>
+              <Col>
+                <b>{company && company.businessType}</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={5}>Registration Date : </Col>
+              <Col>
+                <b>{company && company.createdAt.substring(0, 10)}</b>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <h5>Documents</h5>
+            <br />
+            {company &&
+              company.documents &&
+              company.documents.map((doc) => {
+                return (
+                  <Row>
+                    <Col lg={9}>{doc.name}</Col>
+                    <Col>
+                      <a href={doc.url}>
+                        <BsDownload />
+                      </a>
+                    </Col>
+                  </Row>
+                );
+              })}
+          </Col>
+        </Row>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+        <Button className="modal-verify-btn">Verify</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
 function Dashboard() {
-  const arr = [
-    1, 2, 3, 4, 5, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  ];
   const [allShippers, setAllShippers] = useState([]);
   const [unverifiedCompanies, setUnverifiedCompanies] = useState([]);
   const [bookingRequests, setBookingRequests] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState();
 
   useEffect(() => {
     fetchData();
@@ -44,6 +129,11 @@ function Dashboard() {
 
   return (
     <div className="dashboard-main">
+      <ViewCompanyDetailsModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        company={selectedCompany}
+      />
       <div className="dashboard-content">
         <div className="dashboard-row-one">
           <div className="dashboard-shippers-div">
@@ -63,7 +153,7 @@ function Dashboard() {
                   <p>Document Status</p>
                 </div>
                 <div>
-                  <p>Verify</p>
+                  <p>View Details</p>
                 </div>
               </div>
               <div className="content-items">
@@ -80,9 +170,16 @@ function Dashboard() {
                     >
                       <div>{company.name}</div>
                       <div>{company.createdAt.substring(0, 10)}</div>
-                      <div>{company.documents.length} Documents Uploaded</div>
+                      <div>{company.documents.length} Documents</div>
                       <div>
-                        <button>VERIFY</button>
+                        <button
+                          onClick={() => {
+                            setSelectedCompany(company);
+                            setModalShow(true);
+                          }}
+                        >
+                          VIEW
+                        </button>
                       </div>
                     </div>
                   );
