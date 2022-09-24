@@ -10,8 +10,25 @@ const Ports = () => {
   ];
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editCountry, setEditCountry] = useState("");
+  const [editPort,setEditPort]=useState({});
   const [ports, setPorts] = useState([]);
   const [show, setShow] = useState(false);
+  const [editShow,setEditShow]=useState(false);
+  const [isSortedByDate, setIsSortedByDate] = useState(false);
+  const [isSortedByName, setIsSortedByName] = useState(false);
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+   axios.get("http://localhost:8000/admin/api/ports").then((res)=>{
+    setPorts(res.data.data);
+    console.log(res.data.data);
+   });
+  
+    
+  }, [reload]);
+  
 
   function addPort() {
     axios
@@ -30,8 +47,21 @@ const Ports = () => {
     setShow(true);
   }
 
+  function handleEditShow(p){
+    setEditShow(true);
+    setEditPort(p);
+    setEditCountry(p.country);
+    setEditName(p.name);
+  }
+
   function handleClose() {
     setShow(false);
+    setEditShow(false);
+    setCountry("");
+    setEditCountry("");
+    setName("");
+    setEditName("");
+    setEditPort({});
   }
   
   function handleChange(e) {
@@ -43,6 +73,70 @@ const Ports = () => {
     if (name === "country") {
       setCountry(value);
     }
+    if(name==="editcountry"){
+      setEditCountry(value);
+    }
+    if(name==="editname"){
+      setEditName(value);
+    }
+  }
+
+  function handleEditPort(){
+    
+    let id=editPort.id;
+    console.log(id);
+    axios.patch(`http://localhost:8000/admin/api/ports/${id}`,{
+      country:editCountry,
+      name:editName
+    }).then((res)=>{
+      if(res.data){
+        let tempports=[...ports];
+        let updateIndex=tempports.findIndex((a)=>a.id===id);
+        tempports[updateIndex]=res.data.data;
+        setPorts(tempports);
+      }
+      handleClose();
+    });
+  }
+
+  function handleDeletePort(port){
+    let id=port.id;
+    axios
+      .delete(`http://localhost:8000/admin/api/ports/${id}`)
+      .then((res) => {
+        console.log("Port deleted");
+        let b =ports.findIndex((a) => a.id === id);
+        var temparr = [...ports];
+        temparr.splice(b, 1);
+        setPorts(temparr);
+        handleClose();
+      });
+  }
+
+  function sortByName(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...ports];
+    temparr.sort((a, b) =>
+      isSortedByName
+        ? b.name.toString().localeCompare(a.name.toString())
+        : a.name.toString().localeCompare(b.name.toString())
+    );
+    setPorts(temparr);
+    setIsSortedByName(!isSortedByName);
+  }
+
+  function sortByDate(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...ports];
+    temparr.sort((a, b) =>
+      isSortedByDate
+        ? new Date(a.createdAt) - new Date(b.createdAt)
+        : new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    setIsSortedByDate(!isSortedByDate);
+    setPorts(temparr);
   }
 
   return (
@@ -53,9 +147,9 @@ const Ports = () => {
           <button>Search</button>
         </div>
         <div className="sort-div">
-          <button>Sort By Name</button>
-          <button>Sort By Date Added</button>
-          <button>Reload</button>
+          <button onClick={(e) => sortByName(e)}>Sort By Name</button>
+          <button onClick={(e) => sortByDate(e)}>Sort By Date Added</button>
+          <button onClick={() => setReload(!reload)}>Reload</button>
         </div>
         <div className="add-port-div">
           <button onClick={handleShow}>Add New Port</button>
@@ -113,7 +207,8 @@ const Ports = () => {
           </div>
         </div>
         <div className="ports-list-items-div">
-          {arr.map((a, ind) => {
+         
+          {ports.map((port, ind) => {
             return (
               <div
                 style={
@@ -123,20 +218,66 @@ const Ports = () => {
                 }
                 className="ports-list-item"
               >
+                <Modal show={editShow} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <h3>Edit Details</h3>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div>
+                      <Form>
+                        <Form.Label>Port Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          onChange={(e) => handleChange(e)}
+                          value={editName}
+                          name="editname"
+                        />
+                        <Form.Label>Country</Form.Label>
+                        <Form.Control
+                          type="text"
+                          onChange={(e) => handleChange(e)}
+                          value={editCountry}
+                          name="editcountry"
+                        />
+                        <div className="add_btn">
+                          <button
+                            type="button"
+                            onClick={() => handleEditPort(port)}
+                          >
+                            Save
+                          </button>
+                          <button className="delete_btn" type="button">
+                            Delete
+                          </button>
+                        </div>
+                      </Form>
+                    </div>
+                  </Modal.Body>
+                </Modal>
                 <div>
-                  <p>Hambantota</p>
+                  <p>{port.name}</p>
                 </div>
                 <div>
-                  <p>Sri Lanka</p>
+                  <p>{port.country}</p>
                 </div>
                 <div>
-                  <p>22 Aug, 2022</p>
+                  <p>{port.createdAt.substring(0, 10)}</p>
                 </div>
                 <div>
-                  <button className="port-update-btn">EDIT</button>
+                  <button
+                    onClick={() => handleEditShow(port)}
+                    className="port-update-btn"
+                  >
+                    EDIT
+                  </button>
                 </div>
                 <div>
-                  <button className="port-delete-btn">DELETE</button>
+                  <button
+                    onClick={() => handleDeletePort(port)}
+                    className="port-delete-btn"
+                  >
+                    DELETE
+                  </button>
                 </div>
               </div>
             );

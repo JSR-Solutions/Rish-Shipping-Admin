@@ -13,7 +13,7 @@ const Company = () => {
       setCompanies(res.data.data);
       console.log(res.data.data);
     });
-  })
+  },[]);
   return (
     <div className="companys-parent-div">
       <div className="companys-actions-div">
@@ -46,7 +46,7 @@ const Company = () => {
           </div>
         </div>
         <div className="companys-list-items-div">
-          {arr.map((a, ind) => {
+          {companies.map((a, ind) => {
             return (
               <div
                 style={
@@ -57,16 +57,16 @@ const Company = () => {
                 className="companys-list-item"
               >
                 <div>
-                  <p>Surat Textiles</p>
+                  <p>{a.name}</p>
                 </div>
                 <div>
                   <p>0 bookings</p>
                 </div>
                 <div>
-                  <p>Unverified</p>
+                  <p>{a.isVerified ? `Verified` : `Unverified`}</p>
                 </div>
                 <div>
-                  <p>2 Documents Uploaded</p>
+                  <p>{a.documents.length} Documents Uploaded</p>
                 </div>
                 <div>
                   <button className="company-view-btn">VIEW</button>
