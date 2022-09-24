@@ -1,10 +1,26 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import "./Bookings.css";
 
 const Bookings = () => {
-  const arr = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 8, 91, 1, 2, 2, 3, 1, 4, 56,
-  ];
+  const [bookings, setBookings] = useState([]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const fetchBookings = async () => {
+    try {
+      const bookingResponse = await axios({
+        method: "POST",
+        url: "http://localhost:8000/admin/api/booking/",
+        data: {
+          status: "Pending",
+        },
+      });
+      setBookings(bookingResponse.data.data);
+    } catch (error) {}
+  };
 
   return (
     <div className="bookings-parent-div">
@@ -45,7 +61,7 @@ const Bookings = () => {
           </div>
         </div>
         <div className="bookings-list-items-div">
-          {arr.map((a, ind) => {
+          {bookings.map((booking, ind) => {
             return (
               <div
                 style={
@@ -56,22 +72,22 @@ const Bookings = () => {
                 className="bookings-list-item"
               >
                 <div>
-                  <p>Surat Textiles</p>
+                  <p>{booking.clientCompany.name}</p>
                 </div>
                 <div>
-                  <p>Akash Shipping</p>
+                  <p>{booking.shippingCompany.name}</p>
                 </div>
                 <div>
-                  <p>22 Aug, 2022</p>
+                  <p>{booking.createdAt.substring(0, 10)}</p>
                 </div>
                 <div>
-                  <p>Hambantota</p>
+                  <p>{booking.sourcePort.name}</p>
                 </div>
                 <div>
-                  <p>Chicago</p>
+                  <p>{booking.destinationPort.name}</p>
                 </div>
                 <div>
-                  <p>Rs. 1,29,000/-</p>
+                  <p>{booking.bookingCost}</p>
                 </div>
                 <div>
                   <button className="booking-view-btn">VIEW</button>
