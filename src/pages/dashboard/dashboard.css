@@ -121,7 +121,13 @@
   text-align: center;
 }
 
-.content-item button {
+.modal-verify-btn {
+  width: max-content !important;
+  padding: 8px 14px !important;
+}
+
+.content-item button,
+.modal-verify-btn {
   width: 50%;
   margin-left: 16px;
   background-color: #5bb318;
@@ -134,7 +140,8 @@
   transition: 0.2s ease;
 }
 
-.content-item button:hover {
+.content-item button:hover,
+.modal-verify-btn:hover {
   background-color: #519b18;
   cursor: pointer;
 }
