@@ -9,11 +9,29 @@ import { BsDownload } from "react-icons/bs";
 import "./dashboard.css";
 
 function ViewCompanyDetailsModal(props) {
-  const { company } = props;
+  const { company, fetchData } = props;
 
-  useEffect(() => {
-    console.log(props && props.company && props.company);
-  }, [props]);
+  useEffect(() => {}, [props]);
+
+  const verifyCompany = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios({
+        method: "PATCH",
+        url: "http://localhost:8000/admin/api/company/toggle-verification",
+        data: {
+          companyId: company && company._id,
+          verificationStatus: true,
+        },
+      });
+      if (response.status) {
+        fetchData();
+        props.onHide();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Modal
@@ -83,7 +101,9 @@ function ViewCompanyDetailsModal(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
-        <Button className="modal-verify-btn">Verify</Button>
+        <Button onClick={verifyCompany} className="modal-verify-btn">
+          Verify
+        </Button>
       </Modal.Footer>
     </Modal>
   );
@@ -133,6 +153,7 @@ function Dashboard() {
         show={modalShow}
         onHide={() => setModalShow(false)}
         company={selectedCompany}
+        fetchData={fetchData}
       />
       <div className="dashboard-content">
         <div className="dashboard-row-one">
