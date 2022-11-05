@@ -9,7 +9,7 @@ const Company = () => {
   const [companies,setCompanies]=useState([]);
 
   useEffect(()=>{
-    axios.get("http://localhost:8000/admin/api/company/all-business").then((res)=>{
+    axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/company/all-business").then((res)=>{
       setCompanies(res.data.data);
       console.log(res.data.data);
     });
