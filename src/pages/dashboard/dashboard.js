@@ -115,10 +115,10 @@ function Dashboard() {
   const [bookingRequests, setBookingRequests] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState();
+  const [bookingsShow, setBookingsShow] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+ 
 
   const fetchData = async () => {
     try {
@@ -140,9 +140,21 @@ function Dashboard() {
         },
       });
       setBookingRequests(bookingResponse.data.data);
+      
     } catch (error) {
       console.log(`ERROR : ${JSON.stringify(error)}`);
     }
+  };
+
+  const approveBooking = (bookingId) => {
+    console.log(bookingId);
+    axios
+      .patch(`http://localhost:8000/admin/api/booking/approve/${bookingId}`)
+      .then((res) => {
+        fetchData();
+        setBookingsShow(false);
+      });
+
   };
 
   let navigate = useNavigate();
@@ -257,7 +269,7 @@ function Dashboard() {
           <div className="dashboard-bookings-div">
             <div className="header-div">
               <h3>New Booking Requests</h3>
-              <button>VIEW ALL</button>
+              <button onClick={() => navigate("/bookings")}>VIEW ALL</button>
             </div>
             <div className="content-div">
               <div className="content-header">
@@ -278,6 +290,67 @@ function Dashboard() {
                 </div>
               </div>
               <div className="content-items">
+                <Modal
+                  show={bookingsShow}
+                  onHide={() => setBookingsShow(false)}
+                >
+                  <Modal.Header closeButton>Booking Details</Modal.Header>
+                  <Modal.Body>
+                    <div className="modal_div">
+                      <div style={{ marginRight: "40px" }}>
+                        <p>Client Company Name</p>
+                        <p>Shipping Company Name</p>
+                        <p>Source Port</p>
+                        <p>Destination Port</p>
+                        <p>DeliveryDate</p>
+                        <p>Items Dimensions</p>
+                        <p>Booking Cost</p>
+                      </div>
+                      <div>
+                        <p>
+                          :{" "}
+                          {selectedBooking &&
+                            selectedBooking.clientCompany.name}
+                        </p>
+                        <p>
+                          :{" "}
+                          {selectedBooking &&
+                            selectedBooking.shippingCompany.name}
+                        </p>
+                        <p>
+                          : {selectedBooking && selectedBooking.sourcePort.name}
+                        </p>
+                        <p>
+                          :{" "}
+                          {selectedBooking &&
+                            selectedBooking.destinationPort.name}
+                        </p>
+                        <p>
+                          :{" "}
+                          {selectedBooking &&
+                            selectedBooking.deliveryDateRequired.substring(
+                              0,
+                              10
+                            )}
+                        </p>
+                        <p>
+                          : {selectedBooking && selectedBooking.itemDimensions}
+                        </p>
+                        <p>
+                          : ₹ {selectedBooking && selectedBooking.bookingCost}
+                        </p>
+                      </div>
+                    </div>
+                    <div style={{width:"100%",display:"flex",justifyContent:"center",marginTop:"20px"}}>
+                      <button
+                        className="modal_approve_btn"
+                        onClick={() => approveBooking(selectedBooking.id)}
+                      >
+                        Approve
+                      </button>
+                    </div>
+                  </Modal.Body>
+                </Modal>
                 {bookingRequests.map((bookingRequest, index) => {
                   return (
                     <div
@@ -300,7 +373,14 @@ function Dashboard() {
                         {bookingRequest.destinationPort.country}
                       </div>
                       <div>
-                        <button>VIEW</button>
+                        <button
+                          onClick={() => {
+                            setSelectedBooking(bookingRequest);
+                            setBookingsShow(true);
+                          }}
+                        >
+                          VIEW
+                        </button>
                       </div>
                     </div>
                   );

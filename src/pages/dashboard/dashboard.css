@@ -139,9 +139,32 @@
   border-radius: 4px;
   transition: 0.2s ease;
 }
-
+.content-item button{
+  width: 70%;
+}
 .content-item button:hover,
 .modal-verify-btn:hover {
   background-color: #519b18;
+  cursor: pointer;
+}
+.modal_div{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.modal_approve_btn{
+   width: 40%;
+  margin-left: 16px;
+  background-color: #5bb318;
+  padding: 8px;
+  font-family: "Montserrat";
+  color: white;
+  font-weight: bolder;
+  border: none !important;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+.modal_approve_btn:hover{
+    background-color: #519b18;
   cursor: pointer;
 }

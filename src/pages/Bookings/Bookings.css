@@ -149,3 +149,36 @@
 .booking-delete-btn:hover {
   background-color: #aa1d1d;
 }
+.status-div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 5px ;
+  border-bottom: 1px solid rgb(227, 227, 227);
+  padding-right: 400px;
+}
+.status-tab-btn{
+  color: #283046;
+  background-color: white;
+  border: 1px solid #283046;
+  min-width: 100px;
+  padding: 10px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+ .active{
+  color: white;
+  background-color: #283046;
+  border: 1px solid #283046;
+  min-width: 100px;
+  padding: 10px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
