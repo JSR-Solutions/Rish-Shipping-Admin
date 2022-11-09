@@ -4,10 +4,11 @@ import "./Bookings.css";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
+  const [status, setStatus] = useState("Confirmed");
 
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [status]);
 
   const fetchBookings = async () => {
     try {
@@ -15,10 +16,11 @@ const Bookings = () => {
         method: "POST",
         url: "http://localhost:8000/admin/api/booking/",
         data: {
-          status: "Pending",
+          status: status,
         },
       });
       setBookings(bookingResponse.data.data);
+      console.log(bookingResponse);
     } catch (error) {}
   };
 
@@ -36,7 +38,46 @@ const Bookings = () => {
           <button>Sort By Amount</button>
         </div>
       </div>
+      <div className="bookings-status-div"></div>
       <div className="bookings-list-div">
+        <div className="status-div">
+          <button
+            className={status === "Confirmed" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("Confirmed")}
+          >
+            Confirmed
+          </button>
+          <button
+            className={status === "Pending" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("Pending")}
+          >
+            Pending
+          </button>
+          <button
+            className={status === "Cancelled" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("Cancelled")}
+          >
+            Cancelled
+          </button>
+          <button
+            className={status === "In Transit" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("In Transit")}
+          >
+            In Transit
+          </button>
+          <button
+            className={status === "Completed" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("Completed")}
+          >
+            Completed
+          </button>
+          <button
+            className={status === "Rejected" ? "active" : "status-tab-btn"}
+            onClick={() => setStatus("Rejected")}
+          >
+            Rejected
+          </button>
+        </div>
         <div className="bookings-list-header">
           <div>
             <p>Company</p>
