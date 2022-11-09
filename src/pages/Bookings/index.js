@@ -14,7 +14,7 @@ const Bookings = () => {
     try {
       const bookingResponse = await axios({
         method: "POST",
-        url: "http://localhost:8000/admin/api/booking/",
+        url: "https://rish-shipping-backend-api.vercel.app/admin/api/booking/",
         data: {
           status: status,
         },

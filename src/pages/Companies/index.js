@@ -116,7 +116,9 @@ const Company = () => {
   const [selectedCompany, setSelectedCompany] = useState();
 
   useEffect(()=>{
+
     fetchData();
+
   },[]);
    
   const fetchData=()=>{

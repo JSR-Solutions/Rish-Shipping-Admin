@@ -16,7 +16,7 @@ const Shippers = () => {
   const [reload, setReload] = useState(false);
   const [addModal, setAddModal] = useState(false);
   useEffect(() => {
-    axios.get("http://localhost:8000/admin/api/shippers/all").then((res) => {
+    axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/all").then((res) => {
       console.log(res.data);
       setAllShippers(res.data.data);
     });
@@ -100,7 +100,7 @@ const Shippers = () => {
 
   function addShipper() {
     axios
-      .post(`http://localhost:8000/admin/api/shippers/`, {
+      .post(`https://rish-shipping-backend-api.vercel.app/admin/api/shippers/`, {
         website: website,
         contactNo: contact,
         address: address,
@@ -117,7 +117,7 @@ const Shippers = () => {
   function DeleteShipper(id) {
     console.log(id);
     axios
-      .delete("http://localhost:8000/admin/api/shippers/", {
+      .delete("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/", {
         data: {
           shipperId: id,
         },
@@ -133,7 +133,7 @@ const Shippers = () => {
   }
   function EditShipper(id) {
     axios
-      .patch(`http://localhost:8000/admin/api/shippers/`, {
+      .patch(`https://rish-shipping-backend-api.vercel.app/admin/api/shippers/`, {
         website: website,
         contactNo: contact,
         address: address,

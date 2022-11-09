@@ -25,7 +25,7 @@ const Ports = () => {
   }, [reload]);
 
   function getPorts(){
-    axios.get("http://localhost:8000/admin/api/ports").then((res) => {
+    axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/ports").then((res) => {
       setPorts(res.data.data);
       console.log(res.data.data);
     });
@@ -33,7 +33,7 @@ const Ports = () => {
 
   function addPort() {
     axios
-      .post("http://localhost:8000/admin/api/ports", {
+      .post("https://rish-shipping-backend-api.vercel.app/admin/api/ports", {
         name: name,
         country: country,
       })
@@ -87,7 +87,7 @@ const Ports = () => {
     let id = editPort.id;
     console.log(id);
     axios
-      .patch(`http://localhost:8000/admin/api/ports/${id}`, {
+      .patch(`https://rish-shipping-backend-api.vercel.app/admin/api/ports/${id}`, {
         country: editCountry,
         name: editName,
       })
@@ -104,7 +104,7 @@ const Ports = () => {
 
   function handleDeletePort(id) {
     console.log(id);
-    axios.delete(`http://localhost:8000/admin/api/ports/${id}`).then((res) => {
+    axios.delete(`https://rish-shipping-backend-api.vercel.app/admin/api/ports/${id}`).then((res) => {
       console.log("Port deleted");
       let b = ports.findIndex((a) => a.id === id);
       var temparr = [...ports];

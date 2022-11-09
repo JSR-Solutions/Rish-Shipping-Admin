@@ -18,7 +18,7 @@ function ViewCompanyDetailsModal(props) {
     try {
       const response = await axios({
         method: "PATCH",
-        url: "http://localhost:8000/admin/api/company/toggle-verification",
+        url: "https://rish-shipping-backend-api.vercel.app/admin/api/company/toggle-verification",
         data: {
           companyId: company && company._id,
           verificationStatus: true,
@@ -123,18 +123,18 @@ function Dashboard() {
   const fetchData = async () => {
     try {
       const shippersResponse = await axios.get(
-        "http://localhost:8000/admin/api/shippers/all"
+        "https://rish-shipping-backend-api.vercel.app/admin/api/shippers/all"
       );
       setAllShippers(shippersResponse.data.data);
 
       const unverifiedCompanyResponse = await axios.get(
-        "http://localhost:8000/admin/api/company/unverified"
+        "https://rish-shipping-backend-api.vercel.app/admin/api/company/unverified"
       );
       setUnverifiedCompanies(unverifiedCompanyResponse.data.data);
 
       const bookingResponse = await axios({
         method: "POST",
-        url: "http://localhost:8000/admin/api/booking/",
+        url: "https://rish-shipping-backend-api.vercel.app/admin/api/booking/",
         data: {
           status: "Pending",
         },

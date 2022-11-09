@@ -23,7 +23,7 @@ function Login() {
     try {
       const response = await axios({
         method: "POST",
-        url: `http://localhost:8000/admin/api/auth/login`,
+        url: `https://rish-shipping-backend-api.vercel.app/admin/api/auth/login`,
         data: {
           email: credentials.email,
           password: credentials.password,
