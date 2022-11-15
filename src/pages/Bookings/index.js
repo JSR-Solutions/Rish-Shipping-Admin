@@ -50,19 +50,21 @@ const handleClose=()=>{
               <div>
                 <input
                   className="input_link"
-                  value="link"
+                  value={link}
                   name="link"
                   placeholder="Enter the Link"
                 ></input>
-                <button>Approve</button>
-                <button onClick={handleClose} className="cancel_btn">
-                  Cancel
-                </button>
+                <div className="confirmation_btns">
+                  <button className="yes_btn">Approve</button>
+                  <button onClick={handleClose} className="cancel_btn">
+                    Cancel
+                  </button>
+                </div>
               </div>
             ) : (
               <div>
                 <p>Are you sure you want to confirm this booking?</p>
-                <div>
+                <div className="confirmation_btns">
                   <button
                     onClick={() => setConfirmationStatus(true)}
                     className="yes_btn"
