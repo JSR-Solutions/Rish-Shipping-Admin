@@ -145,6 +145,9 @@ function Dashboard() {
       console.log(`ERROR : ${JSON.stringify(error)}`);
     }
   };
+  useEffect(()=>{
+    fetchData();
+  },[]);
 
   const approveBooking = (bookingId) => {
     console.log(bookingId);
@@ -172,7 +175,7 @@ function Dashboard() {
           <div className="dashboard-shippers-div">
             <div className="header-div">
               <h3>New Onboarding Requests</h3>
-              <button>VIEW ALL</button>
+              <button onClick={() => navigate("/companies")}>VIEW ALL</button>
             </div>
             <div className="content-div">
               <div className="content-header">
@@ -256,7 +259,7 @@ function Dashboard() {
                       <div>{a.createdAt.substring(0, 10)}</div>
                       <div>33</div>
                       <div>
-                        <button>VIEW</button>
+                        <button onClick={()=>navigate(`/shippers/${a.id}`)}>VIEW</button>
                       </div>
                     </div>
                   );
@@ -341,7 +344,14 @@ function Dashboard() {
                         </p>
                       </div>
                     </div>
-                    <div style={{width:"100%",display:"flex",justifyContent:"center",marginTop:"20px"}}>
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "20px",
+                      }}
+                    >
                       <button
                         className="modal_approve_btn"
                         onClick={() => approveBooking(selectedBooking.id)}
