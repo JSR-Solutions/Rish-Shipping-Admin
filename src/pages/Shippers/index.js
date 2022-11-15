@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Shippers.css";
 import axios from "axios";
 import { Modal, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 const Shippers = () => {
   const [allShippers, setAllShippers] = useState([]);
   const [show, setShow] = useState(false);
@@ -10,11 +11,13 @@ const Shippers = () => {
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
+  const [costs,setCosts]=useState();
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
   const [reload, setReload] = useState(false);
   const [addModal, setAddModal] = useState(false);
+  const navigate=useNavigate();
   useEffect(() => {
     axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/all").then((res) => {
       console.log(res.data);
@@ -46,6 +49,7 @@ const Shippers = () => {
     setEmail(a.email);
     setContact(a.contactNo);
     setWebsite(a.website);
+    setCosts(a.costs);
     setShow(true);
   }
 
@@ -114,44 +118,7 @@ const Shippers = () => {
     handleAddClose();
   }
 
-  function DeleteShipper(id) {
-    console.log(id);
-    axios
-      .delete("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/", {
-        data: {
-          shipperId: id,
-        },
-      })
-      .then((res) => {
-        console.log("Shipper deleted");
-        let b = allShippers.findIndex((a) => a.id === id);
-        var temparr = [...allShippers];
-        temparr.splice(b, 1);
-        setAllShippers(temparr);
-        handleClose();
-      });
-  }
-  function EditShipper(id) {
-    axios
-      .patch(`https://rish-shipping-backend-api.vercel.app/admin/api/shippers/`, {
-        website: website,
-        contactNo: contact,
-        address: address,
-        email: email,
-        name: companyName,
-        shipperId: id,
-      })
-      .then((res) => {
-        console.log("Shipper Updated Successfully");
-        if (res.data) {
-          let temparr = [...allShippers];
-          let updateIndex = temparr.findIndex((abc) => abc.id === id);
-          temparr[updateIndex] = res.data.data;
-          setAllShippers(temparr);
-        }
-      });
-    handleClose();
-  }
+  
 
   return (
     <div className="shippers-parent-div">
@@ -181,50 +148,56 @@ const Shippers = () => {
         </Modal.Header>
         <Modal.Body>
           <div>
-            <Form>
-              <div style={{ padding: "20px" }}>
-                <Form.Label>Company Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  value={companyName}
-                  name="companyName"
-                />
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  value={email}
-                  name="email"
-                />
-                <Form.Label>Contact No.</Form.Label>
-                <Form.Control
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  value={contact}
-                  name="contact"
-                />
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  value={address}
-                  name="address"
-                />
-                <Form.Label>Website</Form.Label>
-                <Form.Control
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  value={website}
-                  name="website"
-                />
-                <div className="add_btn">
-                  <button type="button" onClick={() => addShipper()}>
-                    Add
-                  </button>
+            <div>
+              <Form>
+                <div style={{ padding: "20px" }}>
+                  <Form.Label>Company Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    value={companyName}
+                    name="companyName"
+                  />
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    value={email}
+                    name="email"
+                  />
+                  <Form.Label>Contact No.</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    value={contact}
+                    name="contact"
+                  />
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    value={address}
+                    name="address"
+                  />
+                  <Form.Label>Website</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    value={website}
+                    name="website"
+                  />
+                  <div className="add_btn">
+                    <button type="button" onClick={() => addShipper()}>
+                      Add
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            </div>
+            <div>
+
+            </div>
+            <div className="costs-div"></div>
           </div>
         </Modal.Body>
       </Modal>
@@ -265,73 +238,13 @@ const Shippers = () => {
                 </div>
                 <div>
                   <button
-                    onClick={() => openModal(a)}
+                    onClick={() => navigate(`/shippers/${a.id}`)}
                     className="shipper-view-btn"
                   >
                     VIEW
                   </button>
                 </div>
-                <Modal show={show} onHide={handleClose}>
-                  <Modal.Header closeButton>
-                    <h3>Edit Details</h3>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <div>
-                      <Form>
-                        <Form.Label>Company Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          onChange={(e) => handleChange(e)}
-                          value={companyName}
-                          name="companyName"
-                        />
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                          type="text"
-                          onChange={(e) => handleChange(e)}
-                          value={email}
-                          name="email"
-                        />
-                        <Form.Label>Contact No.</Form.Label>
-                        <Form.Control
-                          type="text"
-                          onChange={(e) => handleChange(e)}
-                          value={contact}
-                          name="contact"
-                        />
-                        <Form.Label>Address</Form.Label>
-                        <Form.Control
-                          type="text"
-                          onChange={(e) => handleChange(e)}
-                          value={address}
-                          name="address"
-                        />
-                        <Form.Label>Website</Form.Label>
-                        <Form.Control
-                          type="text"
-                          onChange={(e) => handleChange(e)}
-                          value={website}
-                          name="website"
-                        />
-                        <div className="add_btn">
-                          <button
-                            type="button"
-                            onClick={() => EditShipper(a.id)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="delete_btn"
-                            type="button"
-                            onClick={() => DeleteShipper(a.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </Form>
-                    </div>
-                  </Modal.Body>
-                </Modal>
+                
               </div>
             );
           })}

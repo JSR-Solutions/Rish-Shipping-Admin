@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
 import "./Bookings.css";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
+  const [show,setModalShow]=useState(false);
+  const [confirmationStatus,setConfirmationStatus]=useState(false);
+  const [link,setLink]=useState("");
 
   useEffect(() => {
     fetchBookings();
@@ -23,10 +27,56 @@ const Bookings = () => {
       console.log(bookingResponse);
     } catch (error) {}
   };
+const handleClose=()=>{
+  setModalShow(false);
+  setConfirmationStatus(false);
+
+}
+  const handleButtonClick=()=>{
+    if(status==="Pending"){
+      setModalShow(true);
+    }
+  }
 
   return (
     <div className="bookings-parent-div">
       <div className="bookings-actions-div">
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <h3>Confirmation</h3>
+          </Modal.Header>
+          <Modal.Body>
+            {confirmationStatus ? (
+              <div>
+                <input
+                  className="input_link"
+                  value="link"
+                  name="link"
+                  placeholder="Enter the Link"
+                ></input>
+                <button>Approve</button>
+                <button onClick={handleClose} className="cancel_btn">
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div>
+                <p>Are you sure you want to confirm this booking?</p>
+                <div>
+                  <button
+                    onClick={() => setConfirmationStatus(true)}
+                    className="yes_btn"
+                  >
+                    Yes
+                  </button>
+                  <button onClick={handleClose} className="cancel_btn">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </Modal.Body>
+        </Modal>
         <div className="search-div">
           <input type="text" placeholder="Search Bookings" />
           <button>Search</button>
@@ -42,37 +92,37 @@ const Bookings = () => {
       <div className="bookings-list-div">
         <div className="status-div">
           <button
-            className={status === "Confirmed" ? "active" : "status-tab-btn"}
+            className={status === "Confirmed" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Confirmed")}
           >
             Confirmed
           </button>
           <button
-            className={status === "Pending" ? "active" : "status-tab-btn"}
+            className={status === "Pending" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Pending")}
           >
             Pending
           </button>
           <button
-            className={status === "Cancelled" ? "active" : "status-tab-btn"}
+            className={status === "Cancelled" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Cancelled")}
           >
             Cancelled
           </button>
           <button
-            className={status === "In Transit" ? "active" : "status-tab-btn"}
+            className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
           >
             In Transit
           </button>
           <button
-            className={status === "Completed" ? "active" : "status-tab-btn"}
+            className={status === "Completed" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Completed")}
           >
             Completed
           </button>
           <button
-            className={status === "Rejected" ? "active" : "status-tab-btn"}
+            className={status === "Rejected" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Rejected")}
           >
             Rejected
@@ -131,7 +181,12 @@ const Bookings = () => {
                   <p>{booking.bookingCost}</p>
                 </div>
                 <div>
-                  <button className="booking-view-btn">VIEW</button>
+                  <button
+                    onClick={handleButtonClick}
+                    className="booking-view-btn"
+                  >
+                    {booking.status === "Pending" ? "Approve" : "VIEW"}
+                  </button>
                 </div>
               </div>
             );

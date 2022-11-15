@@ -9,6 +9,7 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import SingleShipper from "./pages/Shippers/singleShipper";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="" element={<Admin />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/shippers" element={<Shippers />} />
+            <Route path="/shippers/:shipperId" element={<SingleShipper/>}/>
             <Route path="/ports" element={<Ports />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/companies" element={<Company />} />
