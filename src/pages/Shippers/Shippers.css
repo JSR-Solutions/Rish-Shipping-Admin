@@ -305,3 +305,12 @@ tr{
   right:10px;
   cursor: pointer;
 }
+.cost_details::-webkit-scrollbar{
+  width:8px;
+}
+.cost_details::-webkit-scrollbar-thumb{
+  background-color: #283046;
+}
+.cost_details::-webkit-scrollbar-thumb:hover{
+  background-color: #454545;
+}
