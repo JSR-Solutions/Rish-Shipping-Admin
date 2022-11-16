@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Row, Col } from "react-bootstrap";
 import { BsDownload } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 import "./dashboard.css";
 
@@ -117,8 +118,8 @@ function Dashboard() {
   const [selectedCompany, setSelectedCompany] = useState();
   const [bookingsShow, setBookingsShow] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState();
-
- 
+  const [link, setLink] = useState("");
+  const [confirmApprove, setConfirmApprove] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -140,24 +141,30 @@ function Dashboard() {
         },
       });
       setBookingRequests(bookingResponse.data.data);
-      
     } catch (error) {
       console.log(`ERROR : ${JSON.stringify(error)}`);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
-  const approveBooking = (bookingId) => {
-    console.log(bookingId);
-    axios
-      .patch(`http://localhost:8000/admin/api/booking/approve/${bookingId}`)
-      .then((res) => {
-        fetchData();
-        setBookingsShow(false);
+  const approveBooking = async (bookingId) => {
+    try {
+      await axios({
+        method: "PATCH",
+        url: `https://rish-shipping-backend-api.vercel.app/admin/api/booking/approve/${bookingId}`,
+        data: {
+          trackingLink: link,
+        },
       });
 
+      await fetchData();
+      toast("Successfully approved booking");
+      setBookingsShow(false);
+    } catch (err) {
+      toast(err.message);
+    }
   };
 
   let navigate = useNavigate();
@@ -259,7 +266,9 @@ function Dashboard() {
                       <div>{a.createdAt.substring(0, 10)}</div>
                       <div>33</div>
                       <div>
-                        <button onClick={()=>navigate(`/shippers/${a.id}`)}>VIEW</button>
+                        <button onClick={() => navigate(`/shippers/${a.id}`)}>
+                          VIEW
+                        </button>
                       </div>
                     </div>
                   );
@@ -349,15 +358,47 @@ function Dashboard() {
                         width: "100%",
                         display: "flex",
                         justifyContent: "center",
+                        alignItems: "center",
                         marginTop: "20px",
                       }}
                     >
-                      <button
-                        className="modal_approve_btn"
-                        onClick={() => approveBooking(selectedBooking.id)}
-                      >
-                        Approve
-                      </button>
+                      {confirmApprove && (
+                        <input
+                          style={{
+                            width: "80%",
+                            padding: "8px",
+                            border: "1px solid rgba(0,0,0,0.35)",
+                            borderRadius: "6px",
+                          }}
+                          value={link}
+                          placeholder="Enter the tracking link"
+                          onChange={(e) => setLink(e.target.value)}
+                        ></input>
+                      )}
+                    </div>
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      {confirmApprove ? (
+                        <button
+                          className="modal_approve_btn"
+                          onClick={() => approveBooking(selectedBooking.id)}
+                        >
+                          Confirm
+                        </button>
+                      ) : (
+                        <button
+                          className="modal_approve_btn"
+                          onClick={() => setConfirmApprove(true)}
+                        >
+                          Approve
+                        </button>
+                      )}
                     </div>
                   </Modal.Body>
                 </Modal>
