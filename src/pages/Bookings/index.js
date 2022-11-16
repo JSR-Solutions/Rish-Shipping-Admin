@@ -2,15 +2,19 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
+
+// import { search } from "../../utils/helpers";
 import "./Bookings.css";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
+  const [allBookings, setAllBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
   const [show, setModalShow] = useState(false);
   const [confirmationStatus, setConfirmationStatus] = useState(false);
   const [link, setLink] = useState("");
   const [booking, setBooking] = useState();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchBookings();
@@ -26,6 +30,8 @@ const Bookings = () => {
         },
       });
       setBookings(bookingResponse.data.data);
+      setAllBookings(bookingResponse.data.data);
+      console.log(bookings);
     } catch (error) {}
   };
 
@@ -60,6 +66,19 @@ const Bookings = () => {
     } catch (error) {
       toast(error.message);
     }
+  };
+
+  const searchBookings = (e) => {
+    const filteredBookings = [];
+    for (const booking of allBookings) {
+      if (
+        booking.clientCompany.name.toLowerCase().includes(query.toLowerCase())
+      ) {
+        filteredBookings.push(booking);
+      }
+    }
+
+    setBookings(filteredBookings);
   };
 
   return (
@@ -110,8 +129,31 @@ const Bookings = () => {
           </Modal.Body>
         </Modal>
         <div className="search-div">
-          <input type="text" placeholder="Search Bookings" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search Bookings"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") {
+                setBookings(allBookings);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchBookings();
+              }
+            }}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              searchBookings(e);
+            }}
+          >
+            Search
+          </button>
         </div>
         <div className="sort-div">
           <button>Sort By Company</button>
