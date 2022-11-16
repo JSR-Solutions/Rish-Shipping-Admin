@@ -1,14 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import "./Bookings.css";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
-  const [show,setModalShow]=useState(false);
-  const [confirmationStatus,setConfirmationStatus]=useState(false);
-  const [link,setLink]=useState("");
+  const [show, setModalShow] = useState(false);
+  const [confirmationStatus, setConfirmationStatus] = useState(false);
+  const [link, setLink] = useState("");
+  const [booking, setBooking] = useState();
 
   useEffect(() => {
     fetchBookings();
@@ -24,19 +26,41 @@ const Bookings = () => {
         },
       });
       setBookings(bookingResponse.data.data);
-      console.log(bookingResponse);
     } catch (error) {}
   };
-const handleClose=()=>{
-  setModalShow(false);
-  setConfirmationStatus(false);
 
-}
-  const handleButtonClick=()=>{
-    if(status==="Pending"){
+  const handleClose = () => {
+    setModalShow(false);
+    setConfirmationStatus(false);
+  };
+
+  const handleButtonClick = (e, booking) => {
+    if (status === "Pending") {
       setModalShow(true);
+      setBooking(booking);
     }
-  }
+  };
+
+  const approveBooking = async (e) => {
+    e.preventDefault();
+    try {
+      await axios({
+        method: "PATCH",
+        url: `https://rish-shipping-backend-api.vercel.app/admin/api/booking/approve/${booking._id}`,
+        data: {
+          trackingLink: link,
+        },
+      });
+
+      setBooking();
+      setModalShow(false);
+      fetchBookings();
+      setLink("");
+      setConfirmationStatus(false);
+    } catch (error) {
+      toast(error.message);
+    }
+  };
 
   return (
     <div className="bookings-parent-div">
@@ -53,9 +77,15 @@ const handleClose=()=>{
                   value={link}
                   name="link"
                   placeholder="Enter the Link"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setLink(e.target.value);
+                  }}
                 ></input>
                 <div className="confirmation_btns">
-                  <button className="yes_btn">Approve</button>
+                  <button className="yes_btn" onClick={approveBooking}>
+                    Approve
+                  </button>
                   <button onClick={handleClose} className="cancel_btn">
                     Cancel
                   </button>
@@ -184,7 +214,9 @@ const handleClose=()=>{
                 </div>
                 <div>
                   <button
-                    onClick={handleButtonClick}
+                    onClick={(e) => {
+                      handleButtonClick(e, booking);
+                    }}
                     className="booking-view-btn"
                   >
                     {booking.status === "Pending" ? "Approve" : "VIEW"}
