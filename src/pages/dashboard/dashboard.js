@@ -152,7 +152,7 @@ function Dashboard() {
   const approveBooking = (bookingId) => {
     console.log(bookingId);
     axios
-      .patch(`http://localhost:8000/admin/api/booking/approve/${bookingId}`)
+      .patch(`https://rish-shipping-backend-api.vercel.app/admin/api/booking/approve/${bookingId}`)
       .then((res) => {
         fetchData();
         setBookingsShow(false);
