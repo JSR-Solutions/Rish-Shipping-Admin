@@ -27,6 +27,8 @@ function SingleShipper(props) {
   const [secondField, setSecondField] = useState("");
   const [costPerUnit, setCostPerUnit] = useState("");
   const [costType,setCostType]=useState("1");
+  const [categoryType,setCategoryType]=useState("");
+  const [categories,setCategories]=useState([]);
   const [editOpen,setEditOpen]=useState(false);
   const [editId,setEditid]=useState("");
   const costNames = [
@@ -39,6 +41,7 @@ function SingleShipper(props) {
   let navigate = useNavigate();
   useEffect(() => {
     fetchData();
+    fetchCategory();
   }, [params.shipperId]);
 
   function fetchData() {
@@ -87,6 +90,15 @@ function SingleShipper(props) {
     setEmail("");
     setContact("");
     setWebsite("");
+    setCategoryType("");
+  }
+
+  async function fetchCategory() {
+    const categoriesResponse = await axios.get(
+      "https://rish-shipping-backend-api.vercel.app/admin/api/category/all"
+    );
+    console.log(categoriesResponse.data.data);
+    setCategories(categoriesResponse.data.data);
   }
 
   function handleAddClose() {
@@ -96,7 +108,7 @@ function SingleShipper(props) {
     setEmail("");
     setContact("");
     setWebsite("");
-    
+    setCategoryType("");
   }
 
   function openCost() {
@@ -104,7 +116,7 @@ function SingleShipper(props) {
   }
   function openEditCost(c){
     setCostType(c.costType.toString());
-   
+    
     setEditOpen(true);
     setEditid(c.id);
     if(c.firstField){
@@ -119,10 +131,12 @@ function SingleShipper(props) {
 
   function closeCost() {
     setCostModal(false);
+    setEditOpen(false);
     setFirstField("");
     setSecondField("");
     setCostPerUnit("");
     setCostType("1");
+    setCategoryType("");
   }
 
   function openModal() {
@@ -132,6 +146,7 @@ function SingleShipper(props) {
     setContact(shipperData.contactNo);
     setWebsite(shipperData.website);
     setCosts(shipperData.costs);
+    setCategoryType(shipperData.category.name);
     setShow(true);
   }
 
@@ -163,6 +178,7 @@ function SingleShipper(props) {
           email: email,
           name: companyName,
           shipperId: id,
+          category:categoryType
         }
       )
       .then((res) => {
@@ -189,6 +205,9 @@ function SingleShipper(props) {
     }
     if (name === "website") {
       setWebsite(value);
+    }
+    if(name==="category"){
+      setCategoryType(value);
     }
     if (name === "firstField") {
       setFirstField(value);
@@ -261,6 +280,13 @@ function SingleShipper(props) {
                 <Modal.Body>
                   <div>
                     <Form>
+                      <Form.Label>Category Type</Form.Label>
+                      <Form.Select name="category" onChange={handleChange}>
+                        <option>Select Category</option>
+                        {categories.map((a, index) => (
+                          <option value={a._id}>{a.name}</option>
+                        ))}
+                      </Form.Select>
                       <Form.Label>Company Name</Form.Label>
                       <Form.Control
                         type="text"
@@ -322,13 +348,15 @@ function SingleShipper(props) {
                 <p>Contact No</p>
                 <p>Website</p>
                 <p>Email</p>
+                <p>Category</p>
               </div>
               <div className="d2">
                 <p>: {shipperData.name}</p>
                 <p>: {shipperData.address}</p>
                 <p>: {shipperData.contactNo}</p>
                 <p>: {shipperData.website}</p>
-                <p>:{shipperData.email}</p>
+                <p>: {shipperData.email}</p>
+                <p>: {shipperData.category.name}</p>
               </div>
             </div>
             <div className="details_right">
@@ -344,7 +372,6 @@ function SingleShipper(props) {
                           <Form.Label>Cost Type</Form.Label>
                           <Form.Select name="cost" onChange={handleChange}>
                             <option value="1">Size Cost</option>
-                            <option value="2">Distance Cost</option>
                             <option value="3">Continent Cost</option>
                             <option value="4">Container Cost</option>
                           </Form.Select>

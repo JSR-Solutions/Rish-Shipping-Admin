@@ -1,12 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+
+import { useNavigate } from "react-router-dom";
+
 import { toast } from "react-toastify";
 
 // import { search } from "../../utils/helpers";
+
 import "./Bookings.css";
 
 const Bookings = () => {
+  let navigate=useNavigate();
   const [bookings, setBookings] = useState([]);
   const [allBookings, setAllBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
@@ -128,6 +133,7 @@ const Bookings = () => {
             )}
           </Modal.Body>
         </Modal>
+
         <div className="search-div">
           <input
             type="text"
@@ -168,22 +174,24 @@ const Bookings = () => {
           <button
             className={status === "Confirmed" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Confirmed")}
+           
           >
             Confirmed
           </button>
           <button
-            className={status === "Pending" ? "activee" : "status-tab-btn"}
+            className={status === "Pending" ? "activee1" : "status-tab-btn"}
             onClick={() => setStatus("Pending")}
+            
           >
             Pending
           </button>
           <button
-            className={status === "Cancelled" ? "activee" : "status-tab-btn"}
+            className={status === "Cancelled" ? "activee2 " : "status-tab-btn"}
             onClick={() => setStatus("Cancelled")}
           >
             Cancelled
           </button>
-          <button
+          {/*<button
             className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
           >
@@ -200,7 +208,8 @@ const Bookings = () => {
             onClick={() => setStatus("Rejected")}
           >
             Rejected
-          </button>
+            </button>*/}
+          <div style={{ width: "50%" }}> </div>
         </div>
         <div className="bookings-list-header">
           <div>
@@ -256,12 +265,16 @@ const Bookings = () => {
                 </div>
                 <div>
                   <button
+
+                    onClick={() => navigate(`/bookings/${booking._id}`)}
+
                     onClick={(e) => {
                       handleButtonClick(e, booking);
                     }}
+
                     className="booking-view-btn"
                   >
-                    {booking.status === "Pending" ? "Approve" : "VIEW"}
+                    VIEW
                   </button>
                 </div>
               </div>

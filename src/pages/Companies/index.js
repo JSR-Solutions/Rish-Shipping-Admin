@@ -17,7 +17,7 @@ function ViewCompanyDetailsModal(props) {
     try {
       const response = await axios({
         method: "PATCH",
-        url: "http://localhost:8000/admin/api/company/toggle-verification",
+        url: "https://rish-shipping-backend-api.vercel.app/admin/api/company/toggle-verification",
         data: {
           companyId: company && company._id,
           verificationStatus: true,
@@ -123,7 +123,9 @@ const Company = () => {
    
   const fetchData=()=>{
     axios
-      .get("http://localhost:8000/admin/api/company/all-business")
+      .get(
+        "https://rish-shipping-backend-api.vercel.app/admin/api/company/all-business"
+      )
       .then((res) => {
         setCompanies(res.data.data);
         console.log(res.data.data);
