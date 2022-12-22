@@ -4,6 +4,7 @@ import axios from "axios";
 import { Modal, Form } from "react-bootstrap";
 
 function SingleBooking(props) {
+  
  const params = useParams();
  const [bookingId, setBookingId] = useState(params.bookingId);
 const [bookingData, setBookingData] = useState({});
