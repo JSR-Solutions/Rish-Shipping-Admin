@@ -5,27 +5,35 @@ import { Modal, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 const Shippers = () => {
   const [allShippers, setAllShippers] = useState([]);
+  const [shippers, setShippers] = useState([]);
   const [show, setShow] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
+
   const [categoryType,setCategoryType]=useState("");
   const [costs,setCosts]=useState();
+
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
   const [categories,setCategories]=useState([]);
   const [reload, setReload] = useState(false);
+  const [query, setQuery] = useState("");
   const [addModal, setAddModal] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
+
     axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/all").then((res) => {
       console.log(res.data);
       setAllShippers(res.data.data);
+      setShippers(res.data.data);
     });
     fetchCategory();
+
   }, [reload]);
 
   function handleClose() {
@@ -120,6 +128,7 @@ const Shippers = () => {
 
   function addShipper() {
     axios
+
       .post(`https://rish-shipping-backend-api.vercel.app/admin/api/shippers/`, {
         website: website,
         contactNo: contact,
@@ -128,6 +137,7 @@ const Shippers = () => {
         name: companyName,
         category:categoryType,
       })
+
       .then((res) => {
         setAllShippers((e) => [...e, res.data.data]);
         console.log("New Shipper Added");
@@ -135,7 +145,16 @@ const Shippers = () => {
     handleAddClose();
   }
 
-  
+  const searchBookings = (e) => {
+    const filtered = [];
+    for (const shipper of shippers) {
+      if (shipper.name.toLowerCase().includes(query.toLowerCase())) {
+        filtered.push(shipper);
+      }
+    }
+
+    setAllShippers(filtered);
+  };
 
   return (
     <div className="shippers-parent-div">
@@ -144,9 +163,18 @@ const Shippers = () => {
           <input
             type="text"
             placeholder="Search Shippers"
-            onChange={handleChange}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") setAllShippers(shippers);
+            }}
             name="search"
-            value={searchVal}
+            value={query}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchBookings();
+              }
+            }}
           />
           <button>Search</button>
         </div>
