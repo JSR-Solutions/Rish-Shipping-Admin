@@ -11,10 +11,12 @@ const Shippers = () => {
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
+  const [categoryType,setCategoryType]=useState("");
   const [costs,setCosts]=useState();
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
+  const [categories,setCategories]=useState([]);
   const [reload, setReload] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const navigate=useNavigate();
@@ -23,6 +25,7 @@ const Shippers = () => {
       console.log(res.data);
       setAllShippers(res.data.data);
     });
+    fetchCategory();
   }, [reload]);
 
   function handleClose() {
@@ -31,6 +34,7 @@ const Shippers = () => {
     setCompanyName("");
     setEmail("");
     setContact("");
+    
     setWebsite("");
   }
 
@@ -40,6 +44,7 @@ const Shippers = () => {
     setCompanyName("");
     setEmail("");
     setContact("");
+    setCategoryType("");
     setWebsite("");
   }
 
@@ -50,8 +55,16 @@ const Shippers = () => {
     setContact(a.contactNo);
     setWebsite(a.website);
     setCosts(a.costs);
+    
     setShow(true);
   }
+   async function fetchCategory() {
+     const categoriesResponse = await axios.get(
+       "https://rish-shipping-backend-api.vercel.app/admin/api/category/all"
+     );
+     console.log(categoriesResponse.data.data);
+     setCategories(categoriesResponse.data.data);
+   }
 
   function handleChange(e) {
     e.preventDefault();
@@ -73,6 +86,9 @@ const Shippers = () => {
     }
     if (name === "website") {
       setWebsite(value);
+    }
+    if(name==="category"){
+      setCategoryType(value);
     }
   }
 
@@ -110,6 +126,7 @@ const Shippers = () => {
         address: address,
         email: email,
         name: companyName,
+        category:categoryType,
       })
       .then((res) => {
         setAllShippers((e) => [...e, res.data.data]);
@@ -151,35 +168,41 @@ const Shippers = () => {
             <div>
               <Form>
                 <div style={{ padding: "20px" }}>
-                  <Form.Label>Company Name</Form.Label>
+                  <Form.Label>Category Type</Form.Label>
+                  <Form.Select name="category" onChange={handleChange}>
+                    {categories.map((a, index) => (
+                      <option value={a._id}>{a.name}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Label className="mt-2">Company Name</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={companyName}
                     name="companyName"
                   />
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="mt-2">Email</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={email}
                     name="email"
                   />
-                  <Form.Label>Contact No.</Form.Label>
+                  <Form.Label className="mt-2">Contact No.</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={contact}
                     name="contact"
                   />
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label className="mt-2">Address</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={address}
                     name="address"
                   />
-                  <Form.Label>Website</Form.Label>
+                  <Form.Label className="mt-2">Website</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
@@ -194,9 +217,7 @@ const Shippers = () => {
                 </div>
               </Form>
             </div>
-            <div>
-
-            </div>
+            <div></div>
             <div className="costs-div"></div>
           </div>
         </Modal.Body>
@@ -244,7 +265,6 @@ const Shippers = () => {
                     VIEW
                   </button>
                 </div>
-                
               </div>
             );
           })}

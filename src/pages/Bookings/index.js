@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import "./Bookings.css";
 
 const Bookings = () => {
+  let navigate=useNavigate();
   const [bookings, setBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
   const [show,setModalShow]=useState(false);
@@ -79,6 +81,7 @@ const handleClose=()=>{
             )}
           </Modal.Body>
         </Modal>
+
         <div className="search-div">
           <input type="text" placeholder="Search Bookings" />
           <button>Search</button>
@@ -96,22 +99,24 @@ const handleClose=()=>{
           <button
             className={status === "Confirmed" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Confirmed")}
+           
           >
             Confirmed
           </button>
           <button
-            className={status === "Pending" ? "activee" : "status-tab-btn"}
+            className={status === "Pending" ? "activee1" : "status-tab-btn"}
             onClick={() => setStatus("Pending")}
+            
           >
             Pending
           </button>
           <button
-            className={status === "Cancelled" ? "activee" : "status-tab-btn"}
+            className={status === "Cancelled" ? "activee2 " : "status-tab-btn"}
             onClick={() => setStatus("Cancelled")}
           >
             Cancelled
           </button>
-          <button
+          {/*<button
             className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
           >
@@ -128,7 +133,8 @@ const handleClose=()=>{
             onClick={() => setStatus("Rejected")}
           >
             Rejected
-          </button>
+            </button>*/}
+          <div style={{ width: "50%" }}> </div>
         </div>
         <div className="bookings-list-header">
           <div>
@@ -184,10 +190,10 @@ const handleClose=()=>{
                 </div>
                 <div>
                   <button
-                    onClick={handleButtonClick}
+                    onClick={() => navigate(`/bookings/${booking._id}`)}
                     className="booking-view-btn"
                   >
-                    {booking.status === "Pending" ? "Approve" : "VIEW"}
+                    VIEW
                   </button>
                 </div>
               </div>

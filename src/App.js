@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import SingleShipper from "./pages/Shippers/singleShipper";
+import SingleBooking from "./pages/Bookings/singleBooking";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/shippers/:shipperId" element={<SingleShipper/>}/>
             <Route path="/ports" element={<Ports />} />
             <Route path="/bookings" element={<Bookings />} />
+            <Route path="/bookings/:bookingId" element={<SingleBooking/>}/>
             <Route path="/companies" element={<Company />} />
           </Route>
         </Routes>
