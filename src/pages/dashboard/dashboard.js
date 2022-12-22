@@ -8,7 +8,7 @@ import { BsDownload } from "react-icons/bs";
 
 import { MdDeleteOutline, MdOutlineModeEditOutline } from "react-icons/md";
 
-import { toast } from "react-toastify
+import { toast } from "react-toastify";
 import "./dashboard.css";
 
 function ViewCompanyDetailsModal(props) {
