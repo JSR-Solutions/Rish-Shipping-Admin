@@ -5,24 +5,35 @@ import { Modal, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 const Shippers = () => {
   const [allShippers, setAllShippers] = useState([]);
+  const [shippers, setShippers] = useState([]);
   const [show, setShow] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
+
+  const [categoryType,setCategoryType]=useState("");
   const [costs,setCosts]=useState();
+
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
+  const [categories,setCategories]=useState([]);
   const [reload, setReload] = useState(false);
+  const [query, setQuery] = useState("");
   const [addModal, setAddModal] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
+
     axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/shippers/all").then((res) => {
       console.log(res.data);
       setAllShippers(res.data.data);
+      setShippers(res.data.data);
     });
+    fetchCategory();
+
   }, [reload]);
 
   function handleClose() {
@@ -31,6 +42,7 @@ const Shippers = () => {
     setCompanyName("");
     setEmail("");
     setContact("");
+    
     setWebsite("");
   }
 
@@ -40,6 +52,7 @@ const Shippers = () => {
     setCompanyName("");
     setEmail("");
     setContact("");
+    setCategoryType("");
     setWebsite("");
   }
 
@@ -50,8 +63,16 @@ const Shippers = () => {
     setContact(a.contactNo);
     setWebsite(a.website);
     setCosts(a.costs);
+    
     setShow(true);
   }
+   async function fetchCategory() {
+     const categoriesResponse = await axios.get(
+       "https://rish-shipping-backend-api.vercel.app/admin/api/category/all"
+     );
+     console.log(categoriesResponse.data.data);
+     setCategories(categoriesResponse.data.data);
+   }
 
   function handleChange(e) {
     e.preventDefault();
@@ -73,6 +94,9 @@ const Shippers = () => {
     }
     if (name === "website") {
       setWebsite(value);
+    }
+    if(name==="category"){
+      setCategoryType(value);
     }
   }
 
@@ -104,13 +128,16 @@ const Shippers = () => {
 
   function addShipper() {
     axios
+
       .post(`https://rish-shipping-backend-api.vercel.app/admin/api/shippers/`, {
         website: website,
         contactNo: contact,
         address: address,
         email: email,
         name: companyName,
+        category:categoryType,
       })
+
       .then((res) => {
         setAllShippers((e) => [...e, res.data.data]);
         console.log("New Shipper Added");
@@ -118,7 +145,16 @@ const Shippers = () => {
     handleAddClose();
   }
 
-  
+  const searchBookings = (e) => {
+    const filtered = [];
+    for (const shipper of shippers) {
+      if (shipper.name.toLowerCase().includes(query.toLowerCase())) {
+        filtered.push(shipper);
+      }
+    }
+
+    setAllShippers(filtered);
+  };
 
   return (
     <div className="shippers-parent-div">
@@ -127,9 +163,18 @@ const Shippers = () => {
           <input
             type="text"
             placeholder="Search Shippers"
-            onChange={handleChange}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") setAllShippers(shippers);
+            }}
             name="search"
-            value={searchVal}
+            value={query}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchBookings();
+              }
+            }}
           />
           <button>Search</button>
         </div>
@@ -151,35 +196,41 @@ const Shippers = () => {
             <div>
               <Form>
                 <div style={{ padding: "20px" }}>
-                  <Form.Label>Company Name</Form.Label>
+                  <Form.Label>Category Type</Form.Label>
+                  <Form.Select name="category" onChange={handleChange}>
+                    {categories.map((a, index) => (
+                      <option value={a._id}>{a.name}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Label className="mt-2">Company Name</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={companyName}
                     name="companyName"
                   />
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="mt-2">Email</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={email}
                     name="email"
                   />
-                  <Form.Label>Contact No.</Form.Label>
+                  <Form.Label className="mt-2">Contact No.</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={contact}
                     name="contact"
                   />
-                  <Form.Label>Address</Form.Label>
+                  <Form.Label className="mt-2">Address</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
                     value={address}
                     name="address"
                   />
-                  <Form.Label>Website</Form.Label>
+                  <Form.Label className="mt-2">Website</Form.Label>
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChange(e)}
@@ -194,9 +245,7 @@ const Shippers = () => {
                 </div>
               </Form>
             </div>
-            <div>
-
-            </div>
+            <div></div>
             <div className="costs-div"></div>
           </div>
         </Modal.Body>
@@ -244,7 +293,6 @@ const Shippers = () => {
                     VIEW
                   </button>
                 </div>
-                
               </div>
             );
           })}

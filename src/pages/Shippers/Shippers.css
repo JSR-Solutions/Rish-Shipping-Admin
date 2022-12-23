@@ -150,122 +150,168 @@
   background-color: #aa1d1d;
 }
 /* Modal styling */
-.add_btn{
+.add_btn {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   margin-top: 20px;
 }
-.add_btn button{
+.add_btn button {
   background-color: #519b18;
   padding: 5px 25px;
   border: none;
   outline: none;
   border-radius: 5px;
-  color:white;
+  color: white;
 }
-.delete_btn{
-  background-color: #FF4A4A!important;
+.delete_btn {
+  background-color: #ff4a4a !important;
 }
 /* Single Shipper Page Styling*/
-.shipper_h1{
-  color:black;
+.shipper_h1 {
+  color: black;
   font-weight: 600;
   margin: 20px 0px;
 }
-.single-shipper{
-background-color: white;
+.single-shipper {
+  background-color: white;
   padding: 12px;
   width: 95%;
   border-radius: 8px;
   margin: 16px;
 }
-.details_main{
-  
+.details_main {
   display: flex;
 }
-.details_left{
+.details_left {
   display: flex;
   min-height: 80vh;
   border-right: 1px solid rgb(213, 213, 213);
-  padding:100px 40px;
+  padding: 100px 40px;
   position: relative;
-  flex:0.5;
+  flex: 0.5;
   justify-content: center;
 }
-.details_left h3{
+.details_left h3 {
   position: absolute;
-  top:50px;
+  top: 50px;
   font-weight: 600;
 }
-.d1{
-margin-top: 30px;
+.d1 {
+  margin-top: 30px;
 }
-.d2{
-  margin-top: 30px;;
+.d2 {
+  margin-top: 30px;
+  transform: t;
 }
-.d1 p{
+.d1 p {
   font-size: 20px;
   text-align: left;
   margin-right: 30px;
   line-height: 40px;
 }
-.d2 p{
+.d2 p {
   font-size: 20px;
   text-align: left;
-    line-height: 40px;
+  line-height: 40px;
 }
-.shipper_edit{
+.shipper_edit {
   position: absolute;
-  top:50px;
-  right:60px;
+  top: 50px;
+  right: 60px;
   font-size: 26px;
   cursor: pointer;
 }
-.details_right{
-  flex:0.5;
-  padding:50px 40px;
+.details_right {
+  flex: 0.5;
+  padding: 50px 40px;
   position: relative;
 }
-.details_right h3{
+.details_right h3 {
   font-weight: 600;
 }
-.addCost_btn{
+.addCost_btn {
   position: absolute;
-  top:45px;
-  right:20px;
-  padding:5px 10px;
+  top: 45px;
+  right: 20px;
+  padding: 5px 10px;
   border-radius: 8px;
-   border: 2px solid #283046;
+  border: 2px solid #283046;
   background-color: #283046;
-  color:white;
-  transition: all .3s;
-   font-weight: 600;
+  color: white;
+  transition: all 0.3s;
+  font-weight: 600;
 }
-.addCost_btn:hover{
+.addCost_btn:hover {
   background-color: transparent;
   border: 2px solid #283046;
   color: #283046;
   font-weight: 600;
 }
-.cost_details{
-  max-height: 420px;
+.cost_details {
+  max-height: 60vh;
   overflow-y: scroll;
   margin-top: 20px;
+  text-align: left;
 }
-.cost_div{
-  margin-top:40px;
+.cost_div {
+  margin-top: 40px;
   text-align: left;
   position: relative;
-  
 }
-.cost_div p{
+
+.cost_details h6 {
+  font-weight: bold;
+}
+
+.cost_div p {
   margin-right: 20px;
   margin-top: 20px;
 }
-.delete-icon{
+.delete-icon {
   position: absolute;
-  right:30px;
+  right: 30px;
   font-size: 24px;
+}
+
+table {
+  margin: 0 0 0 !important;
+  width: 100% !important;
+  padding: 6px !important;
+}
+
+table,
+th,
+td {
+  border: 2px !important;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+  padding: 6px !important;
+}
+
+th {
+  border-top: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+.table-div {
+  margin-top: 8px;
+  border: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+}
+tr{
+  position: relative;
+}
+.edit_cost{
+  position: absolute;
+  top:10px;
+  right:10px;
+  cursor: pointer;
+}
+.cost_details::-webkit-scrollbar{
+  width:8px;
+}
+.cost_details::-webkit-scrollbar-thumb{
+  background-color: #283046;
+}
+.cost_details::-webkit-scrollbar-thumb:hover{
+  background-color: #454545;
 }

@@ -172,8 +172,32 @@
 }
  .activee{
   color: white;
-  background-color: #283046;
-  border: 1px solid #283046;
+  background-color: #5bb318;
+  border: 1px solid #5bb318;
+  min-width: 160px;
+  padding:5px 10px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+.activee1{
+color: white;
+  background-color: #FDDA0D;
+  border: 1px solid #FDDA0D;
+  min-width: 160px;
+  padding:5px 10px;
+  font-size: 14px;
+  font-family: "Montserrat";
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s ease;
+}
+.activee2{
+color: white;
+  background-color: #FF0000;
+  border: 1px solid #FF0000;
   min-width: 160px;
   padding:5px 10px;
   font-size: 14px;

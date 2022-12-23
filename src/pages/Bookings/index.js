@@ -1,14 +1,25 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+
+import { useNavigate } from "react-router-dom";
+
+import { toast } from "react-toastify";
+
+// import { search } from "../../utils/helpers";
+
 import "./Bookings.css";
 
 const Bookings = () => {
+  let navigate=useNavigate();
   const [bookings, setBookings] = useState([]);
+  const [allBookings, setAllBookings] = useState([]);
   const [status, setStatus] = useState("Confirmed");
-  const [show,setModalShow]=useState(false);
-  const [confirmationStatus,setConfirmationStatus]=useState(false);
-  const [link,setLink]=useState("");
+  const [show, setModalShow] = useState(false);
+  const [confirmationStatus, setConfirmationStatus] = useState(false);
+  const [link, setLink] = useState("");
+  const [booking, setBooking] = useState();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchBookings();
@@ -24,19 +35,56 @@ const Bookings = () => {
         },
       });
       setBookings(bookingResponse.data.data);
-      console.log(bookingResponse);
+      setAllBookings(bookingResponse.data.data);
+      console.log(bookings);
     } catch (error) {}
   };
-const handleClose=()=>{
-  setModalShow(false);
-  setConfirmationStatus(false);
 
-}
-  const handleButtonClick=()=>{
-    if(status==="Pending"){
+  const handleClose = () => {
+    setModalShow(false);
+    setConfirmationStatus(false);
+  };
+
+  const handleButtonClick = (e, booking) => {
+    if (status === "Pending") {
       setModalShow(true);
+      setBooking(booking);
     }
-  }
+  };
+
+  const approveBooking = async (e) => {
+    e.preventDefault();
+    try {
+      await axios({
+        method: "PATCH",
+        url: `https://rish-shipping-backend-api.vercel.app/admin/api/booking/approve/${booking._id}`,
+        data: {
+          trackingLink: link,
+        },
+      });
+
+      setBooking();
+      setModalShow(false);
+      fetchBookings();
+      setLink("");
+      setConfirmationStatus(false);
+    } catch (error) {
+      toast(error.message);
+    }
+  };
+
+  const searchBookings = (e) => {
+    const filteredBookings = [];
+    for (const booking of allBookings) {
+      if (
+        booking.clientCompany.name.toLowerCase().includes(query.toLowerCase())
+      ) {
+        filteredBookings.push(booking);
+      }
+    }
+
+    setBookings(filteredBookings);
+  };
 
   return (
     <div className="bookings-parent-div">
@@ -53,9 +101,15 @@ const handleClose=()=>{
                   value={link}
                   name="link"
                   placeholder="Enter the Link"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setLink(e.target.value);
+                  }}
                 ></input>
                 <div className="confirmation_btns">
-                  <button className="yes_btn">Approve</button>
+                  <button className="yes_btn" onClick={approveBooking}>
+                    Approve
+                  </button>
                   <button onClick={handleClose} className="cancel_btn">
                     Cancel
                   </button>
@@ -79,9 +133,33 @@ const handleClose=()=>{
             )}
           </Modal.Body>
         </Modal>
+
         <div className="search-div">
-          <input type="text" placeholder="Search Bookings" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search Bookings"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") {
+                setBookings(allBookings);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchBookings();
+              }
+            }}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              searchBookings(e);
+            }}
+          >
+            Search
+          </button>
         </div>
         <div className="sort-div">
           <button>Sort By Company</button>
@@ -96,22 +174,24 @@ const handleClose=()=>{
           <button
             className={status === "Confirmed" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("Confirmed")}
+           
           >
             Confirmed
           </button>
           <button
-            className={status === "Pending" ? "activee" : "status-tab-btn"}
+            className={status === "Pending" ? "activee1" : "status-tab-btn"}
             onClick={() => setStatus("Pending")}
+            
           >
             Pending
           </button>
           <button
-            className={status === "Cancelled" ? "activee" : "status-tab-btn"}
+            className={status === "Cancelled" ? "activee2 " : "status-tab-btn"}
             onClick={() => setStatus("Cancelled")}
           >
             Cancelled
           </button>
-          <button
+          {/*<button
             className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
           >
@@ -128,7 +208,8 @@ const handleClose=()=>{
             onClick={() => setStatus("Rejected")}
           >
             Rejected
-          </button>
+            </button>*/}
+          <div style={{ width: "50%" }}> </div>
         </div>
         <div className="bookings-list-header">
           <div>
@@ -184,10 +265,16 @@ const handleClose=()=>{
                 </div>
                 <div>
                   <button
-                    onClick={handleButtonClick}
+
+                    onClick={() => navigate(`/bookings/${booking._id}`)}
+
+                    onClick={(e) => {
+                      handleButtonClick(e, booking);
+                    }}
+
                     className="booking-view-btn"
                   >
-                    {booking.status === "Pending" ? "Approve" : "VIEW"}
+                    VIEW
                   </button>
                 </div>
               </div>
