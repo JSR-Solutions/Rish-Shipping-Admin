@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Shippers.css";
 import axios from "axios";
 import { Modal, Form } from "react-bootstrap";
+import Loader from "../../SharedComponents/loader/loader";
 import { useNavigate } from "react-router-dom";
 const Shippers = () => {
   const [allShippers, setAllShippers] = useState([]);
@@ -12,10 +13,10 @@ const Shippers = () => {
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
   const [searchVal, setSearchVal] = useState("");
-
+  
   const [categoryType,setCategoryType]=useState("");
   const [costs,setCosts]=useState();
-
+  const [loaded,setLoaded]=useState(false);
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [website, setWebsite] = useState("");
@@ -31,9 +32,10 @@ const Shippers = () => {
       console.log(res.data);
       setAllShippers(res.data.data);
       setShippers(res.data.data);
+      setLoaded(true);
     });
     fetchCategory();
-
+    setQuery("");
   }, [reload]);
 
   function handleClose() {
@@ -176,7 +178,14 @@ const Shippers = () => {
               }
             }}
           />
-          <button>Search</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              searchBookings(e);
+            }}
+          >
+            Search
+          </button>
         </div>
         <div className="sort-div">
           <button onClick={(e) => sortByName(e)}>Sort By Name</button>
@@ -266,36 +275,43 @@ const Shippers = () => {
           </div>
         </div>
         <div className="shippers-list-items-div">
-          {allShippers.map((a, ind) => {
-            return (
-              <div
-                style={
-                  ind % 2 === 0
-                    ? { backgroundColor: "white" }
-                    : { backgroundColor: "#efefef" }
-                }
-                className="shippers-list-item"
-              >
-                <div>
-                  <p>{a.name}</p>
-                </div>
-                <div>
-                  <p>{a.address}</p>
-                </div>
-                <div>
-                  <p>{a.email}</p>
-                </div>
-                <div>
-                  <button
-                    onClick={() => navigate(`/shippers/${a.id}`)}
-                    className="shipper-view-btn"
+          {loaded ? (
+            <>
+              {" "}
+              {allShippers.map((a, ind) => {
+                return (
+                  <div
+                    style={
+                      ind % 2 === 0
+                        ? { backgroundColor: "white" }
+                        : { backgroundColor: "#efefef" }
+                    }
+                    className="shippers-list-item"
                   >
-                    VIEW
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    <div>
+                      <p>{a.name}</p>
+                    </div>
+                    <div>
+                      <p>{a.address}</p>
+                    </div>
+                    <div>
+                      <p>{a.email}</p>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => navigate(`/shippers/${a.id}`)}
+                        className="shipper-view-btn"
+                      >
+                        VIEW
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            <Loader />
+          )}
         </div>
       </div>
     </div>
