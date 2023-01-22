@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Row, Col, Form } from "react-bootstrap";
 import { BsDownload } from "react-icons/bs";
-
+import Loader from "../../SharedComponents/loader/loader";
 import { MdDeleteOutline, MdOutlineModeEditOutline } from "react-icons/md";
 
 import { toast } from "react-toastify";
@@ -314,10 +314,12 @@ handleClose();
     <div className="dashboard-main">
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <h3>{edit?"Edit Category":"Add New Category"}</h3>
+          <h3>{edit ? "Edit Category" : "Add New Category"}</h3>
         </Modal.Header>
         <Modal.Body>
-          <div style={{width:"90%",marginLeft:"auto",marginRight:"auto"}}>
+          <div
+            style={{ width: "90%", marginLeft: "auto", marginRight: "auto" }}
+          >
             <Form>
               <Form.Label className="mt-1">Name</Form.Label>
               <Form.Control
@@ -377,9 +379,9 @@ handleClose();
               >
                 <button
                   style={{ width: "20%", marginTop: "20px" }}
-                  onClick={edit?handleEdit:handleAdd}
+                  onClick={edit ? handleEdit : handleAdd}
                 >
-                 {edit?"Edit":"Add"}
+                  {edit ? "Edit" : "Add"}
                 </button>
               </div>
             </Form>
@@ -415,33 +417,39 @@ handleClose();
                 </div>
               </div>
               <div className="content-items">
-                {unverifiedCompanies.map((company, index) => {
-                  return (
-                    <div
-                      key={index}
-                      style={
-                        index % 2 === 0
-                          ? { backgroundColor: "white" }
-                          : { backgroundColor: "#efefef" }
-                      }
-                      className="content-item"
-                    >
-                      <div>{company.name}</div>
-                      <div>{company.createdAt.substring(0, 10)}</div>
-                      <div>{company.documents.length} Documents</div>
-                      <div>
-                        <button
-                          onClick={() => {
-                            setSelectedCompany(company);
-                            setModalShow(true);
-                          }}
+                {loaded ? (
+                  <>
+                    {unverifiedCompanies.map((company, index) => {
+                      return (
+                        <div
+                          key={index}
+                          style={
+                            index % 2 === 0
+                              ? { backgroundColor: "white" }
+                              : { backgroundColor: "#efefef" }
+                          }
+                          className="content-item"
                         >
-                          VIEW
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                          <div>{company.name}</div>
+                          <div>{company.createdAt.substring(0, 10)}</div>
+                          <div>{company.documents.length} Documents</div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                setSelectedCompany(company);
+                                setModalShow(true);
+                              }}
+                            >
+                              VIEW
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <Loader />
+                )}
               </div>
             </div>
           </div>
@@ -466,28 +474,36 @@ handleClose();
                 </div>
               </div>
               <div className="content-items">
-                {allShippers.map((a, index) => {
-                  return (
-                    <div
-                      key={index}
-                      style={
-                        index % 2 === 0
-                          ? { backgroundColor: "white" }
-                          : { backgroundColor: "#efefef" }
-                      }
-                      className="content-item"
-                    >
-                      <div>{a.name}</div>
-                      <div>{a.createdAt.substring(0, 10)}</div>
-                      <div>33</div>
-                      <div>
-                        <button onClick={() => navigate(`/shippers/${a.id}`)}>
-                          VIEW
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                {loaded ? (
+                  <>
+                    {allShippers.map((a, index) => {
+                      return (
+                        <div
+                          key={index}
+                          style={
+                            index % 2 === 0
+                              ? { backgroundColor: "white" }
+                              : { backgroundColor: "#efefef" }
+                          }
+                          className="content-item"
+                        >
+                          <div>{a.name}</div>
+                          <div>{a.createdAt.substring(0, 10)}</div>
+                          <div>33</div>
+                          <div>
+                            <button
+                              onClick={() => navigate(`/shippers/${a.id}`)}
+                            >
+                              VIEW
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <Loader />
+                )}
               </div>
             </div>
           </div>
@@ -617,40 +633,46 @@ handleClose();
                     </div>
                   </Modal.Body>
                 </Modal>
-                {bookingRequests.map((bookingRequest, index) => {
-                  return (
-                    <div
-                      key={index}
-                      style={
-                        index % 2 === 0
-                          ? { backgroundColor: "white" }
-                          : { backgroundColor: "#efefef" }
-                      }
-                      className="content-item"
-                    >
-                      <div>{bookingRequest.clientCompany.name}</div>
-                      <div>{bookingRequest.createdAt.substring(0, 10)}</div>
-                      <div>
-                        {bookingRequest.sourcePort.name},{" "}
-                        {bookingRequest.sourcePort.country}
-                      </div>
-                      <div>
-                        {bookingRequest.destinationPort.name},{" "}
-                        {bookingRequest.destinationPort.country}
-                      </div>
-                      <div>
-                        <button
-                          onClick={() => {
-                            setSelectedBooking(bookingRequest);
-                            setBookingsShow(true);
-                          }}
+                {loaded ? 
+                  <>
+                    {bookingRequests.map((bookingRequest, index) => {
+                      return (
+                        <div
+                          key={index}
+                          style={
+                            index % 2 === 0
+                              ? { backgroundColor: "white" }
+                              : { backgroundColor: "#efefef" }
+                          }
+                          className="content-item"
                         >
-                          VIEW
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                          <div>{bookingRequest.clientCompany.name}</div>
+                          <div>{bookingRequest.createdAt.substring(0, 10)}</div>
+                          <div>
+                            {bookingRequest.sourcePort.name},{" "}
+                            {bookingRequest.sourcePort.country}
+                          </div>
+                          <div>
+                            {bookingRequest.destinationPort.name},{" "}
+                            {bookingRequest.destinationPort.country}
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                setSelectedBooking(bookingRequest);
+                                setBookingsShow(true);
+                              }}
+                            >
+                              VIEW
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                : 
+                  <Loader />
+                }
               </div>
             </div>
           </div>
@@ -685,13 +707,16 @@ handleClose();
                         <div>
                           <MdOutlineModeEditOutline
                             style={{ fontSize: "24px", marginRight: "10px" }}
-                            onClick={()=>handleEditShow(a)}
+                            onClick={() => handleEditShow(a)}
                           />
-                          <MdDeleteOutline onClick={()=>handleDelete(a._id)} style={{ fontSize: "24px" }} />
+                          <MdDeleteOutline
+                            onClick={() => handleDelete(a._id)}
+                            style={{ fontSize: "24px" }}
+                          />
                         </div>
                       </div>
                     ))
-                  : null}
+                  : <Loader/>}
               </div>
             </div>
           </div>

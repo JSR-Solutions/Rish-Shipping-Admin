@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Row, Col } from "react-bootstrap";
 import { BsDownload } from "react-icons/bs";
+import Loader from "../../SharedComponents/loader/loader";
 import "./Companies.css";
 
 function ViewCompanyDetailsModal(props) {
@@ -112,14 +113,19 @@ function ViewCompanyDetailsModal(props) {
 const Company = () => {
   
   const [companies,setCompanies]=useState([]);
+  const [allCompanies,setAllCompanies]=useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState();
-
+  const [loaded, setLoaded] = useState(false);
+  const [query, setQuery] = useState("");
+  const [isSortedByDate, setIsSortedByDate] = useState(false);
+  const [isSortedByName, setIsSortedByName] = useState(false);
+  const [reload, setReload] = useState(false);
   useEffect(()=>{
 
     fetchData();
-
-  },[]);
+     setQuery("");
+  },[reload]);
    
   const fetchData=()=>{
     axios
@@ -128,9 +134,50 @@ const Company = () => {
       )
       .then((res) => {
         setCompanies(res.data.data);
+        setAllCompanies(res.data.data);
+        setLoaded(true);
         console.log(res.data.data);
       });
   }
+
+  const searchCompanies = (e) => {
+    const filteredBookings = [];
+    for (const company of allCompanies) {
+      if (
+        company.name.toLowerCase().includes(query.toLowerCase())
+      ) {
+        filteredBookings.push(company);
+      }
+    }
+
+    setCompanies(filteredBookings);
+  };
+
+   function sortByName(e) {
+     e.preventDefault();
+     console.log("sorting");
+     let temparr = [...companies];
+     temparr.sort((a, b) =>
+       isSortedByName
+         ? b.name.toString().localeCompare(a.name.toString())
+         : a.name.toString().localeCompare(b.name.toString())
+     );
+     setCompanies(temparr);
+     setIsSortedByName(!isSortedByName);
+   }
+
+   function sortByDate(e) {
+     e.preventDefault();
+     console.log("sorting");
+     let temparr = [...companies];
+     temparr.sort((a, b) =>
+       isSortedByDate
+         ? new Date(a.createdAt) - new Date(b.createdAt)
+         : new Date(b.createdAt) - new Date(a.createdAt)
+     );
+     setIsSortedByDate(!isSortedByDate);
+     setCompanies(temparr);
+   }
 
    
   return (
@@ -143,13 +190,36 @@ const Company = () => {
       />
       <div className="companys-actions-div">
         <div className="search-div">
-          <input type="text" placeholder="Search Companies" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search Companies"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") {
+                setCompanies(allCompanies);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchCompanies();
+              }
+            }}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              searchCompanies(e);
+            }}
+          >
+            Search
+          </button>
         </div>
         <div className="sort-div">
-          <button>Sort By Name</button>
-          <button>Sort By Date Added</button>
-          <button>Reload</button>
+          <button onClick={(e) => sortByName(e)}>Sort By Name</button>
+          <button onClick={(e) => sortByDate(e)}>Sort By Date Added</button>
+          <button onClick={() => setReload(!reload)}>Reload</button>
         </div>
       </div>
       <div className="companys-list-div">
@@ -171,42 +241,48 @@ const Company = () => {
           </div>
         </div>
         <div className="companys-list-items-div">
-          {companies.map((a, ind) => {
-            return (
-              <div
-                style={
-                  ind % 2 === 0
-                    ? { backgroundColor: "white" }
-                    : { backgroundColor: "#efefef" }
-                }
-                className="companys-list-item"
-              >
-                <div>
-                  <p>{a.name}</p>
-                </div>
-                <div>
-                  <p>0 bookings</p>
-                </div>
-                <div>
-                  <p>{a.isVerified ? `Verified` : `Unverified`}</p>
-                </div>
-                <div>
-                  <p>{a.documents.length} Documents Uploaded</p>
-                </div>
-                <div>
-                  <button
-                    className="company-view-btn"
-                    onClick={() => {
-                      setSelectedCompany(a);
-                      setModalShow(true);
-                    }}
+          {loaded ? (
+            <>
+              {companies.map((a, ind) => {
+                return (
+                  <div
+                    style={
+                      ind % 2 === 0
+                        ? { backgroundColor: "white" }
+                        : { backgroundColor: "#efefef" }
+                    }
+                    className="companys-list-item"
                   >
-                    VIEW
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    <div>
+                      <p>{a.name}</p>
+                    </div>
+                    <div>
+                      <p>0 bookings</p>
+                    </div>
+                    <div>
+                      <p>{a.isVerified ? `Verified` : `Unverified`}</p>
+                    </div>
+                    <div>
+                      <p>{a.documents.length} Documents Uploaded</p>
+                    </div>
+                    <div>
+                      <button
+                        className="company-view-btn"
+                        onClick={() => {
+                          setSelectedCompany(a);
+                          setModalShow(true);
+                        }}
+                      >
+                        VIEW
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            <Loader />
+          )}
         </div>
       </div>
     </div>

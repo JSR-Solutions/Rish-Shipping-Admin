@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal, Form } from "react-bootstrap";
 import { MdModeEdit, MdDelete, MdEdit } from "react-icons/md";
+import RatingsModal from "../../SharedComponents/modal/ratingModal";
 function SingleShipper(props) {
   const params = useParams();
   const [shipperId, setShipperId] = useState(params.shipperId);
@@ -31,13 +32,8 @@ function SingleShipper(props) {
   const [categories,setCategories]=useState([]);
   const [editOpen,setEditOpen]=useState(false);
   const [editId,setEditid]=useState("");
-  const costNames = [
-    "Size Cost",
-    "Distance Cost",
-    "Continent Cost",
-    "Container Cost",
-    "Weight Cost",
-  ];
+  const [ratingShow,setRatingShow]=useState(false);
+
   let navigate = useNavigate();
   useEffect(() => {
     fetchData();
@@ -91,6 +87,7 @@ function SingleShipper(props) {
     setContact("");
     setWebsite("");
     setCategoryType("");
+    setRatingShow(false);
   }
 
   async function fetchCategory() {
@@ -231,7 +228,7 @@ function SingleShipper(props) {
       costType:costType,
       firstField:firstField,
       secondField:secondField,
-      costPerUnit:costPerUnit
+      costPerUnit:parseInt(costPerUnit)
     }).then((res)=>{
       console.log("Cost Added Successfully");
       closeCost();
@@ -252,7 +249,7 @@ function SingleShipper(props) {
            costType: costType,
            firstField: firstField,
            secondField: secondField,
-           costPerUnit: costPerUnit,
+           costPerUnit: parseInt(costPerUnit),
          }
        )
        .then((res) => {
@@ -342,6 +339,7 @@ function SingleShipper(props) {
                 </Modal.Body>
               </Modal>
               <h3> Shipper Details</h3>
+              <div style={{display:"flex",position:"relative"}}>
               <div className="d1">
                 <p>Name</p>
                 <p>Address</p>
@@ -357,6 +355,9 @@ function SingleShipper(props) {
                 <p>: {shipperData.website}</p>
                 <p>: {shipperData.email}</p>
                 <p>: {shipperData.category.name}</p>
+              </div>
+              <RatingsModal show={ratingShow} onHide={handleClose} shipper={params.shipperId}/>
+              <button className="rating_button" onClick={()=>setRatingShow(true)}>View Ratings</button>
               </div>
             </div>
             <div className="details_right">
@@ -412,19 +413,33 @@ function SingleShipper(props) {
                       {costType === "3" ? (
                         <div>
                           <Form.Label className="mt-3">From</Form.Label>
-                          <Form.Control
-                            type="text"
-                            onChange={(e) => handleChange(e)}
-                            value={firstField}
+                          <Form.Select
                             name="firstField"
-                          />
+                            value={firstField}
+                            onChange={handleChange}
+                          >
+                            <option value="Asia">Asia</option>
+                            <option value="Africa">Africa</option>
+                            <option value="North America">North America</option>
+                            <option value="South America">South America</option>
+                            <option value="Antartica">Antartica</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Australia">Australia</option>
+                          </Form.Select>
                           <Form.Label className="mt-3">To</Form.Label>
-                          <Form.Control
-                            type="text"
-                            onChange={(e) => handleChange(e)}
-                            value={secondField}
+                          <Form.Select
                             name="secondField"
-                          />
+                            value="secondField"
+                            onChange={handleChange}
+                          >
+                            <option value="Asia">Asia</option>
+                            <option value="Africa">Africa</option>
+                            <option value="North America">North America</option>
+                            <option value="South America">South America</option>
+                            <option value="Antartica">Antartica</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Australia">Australia</option>
+                          </Form.Select>
                           <Form.Label className="mt-3">
                             Cost Per Unit
                           </Form.Label>

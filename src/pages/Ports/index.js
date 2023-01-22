@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Modal, Form } from "react-bootstrap";
-
+import Loader from "../../SharedComponents/loader/loader";
 import "./Ports.css";
 
 const Ports = () => {
@@ -14,20 +14,25 @@ const Ports = () => {
   const [editCountry, setEditCountry] = useState("");
   const [editPort, setEditPort] = useState({});
   const [ports, setPorts] = useState([]);
+  const [allPorts,setAllPorts]=useState([]);
   const [show, setShow] = useState(false);
   const [editShow, setEditShow] = useState(false);
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [reload, setReload] = useState(false);
-
+   const [query, setQuery] = useState("");
+  const [loaded,setLoaded]=useState(false);
   useEffect(() => {
     getPorts();
+    setQuery("");
   }, [reload]);
 
   function getPorts(){
     axios.get("https://rish-shipping-backend-api.vercel.app/admin/api/ports").then((res) => {
       setPorts(res.data.data);
+      setAllPorts(res.data.data);
       console.log(res.data.data);
+      setLoaded(true);
     });
   }
 
@@ -139,13 +144,48 @@ const Ports = () => {
     setIsSortedByDate(!isSortedByDate);
     setPorts(temparr);
   }
+  const searchPorts = (e) => {
+    const filteredPorts = [];
+    for (const port of allPorts) {
+      if (
+        port.name.toLowerCase().includes(query.toLowerCase())
+      ) {
+        filteredPorts.push(port);
+      }
+    }
+
+    setPorts(filteredPorts);
+  };
 
   return (
     <div className="ports-parent-div">
       <div className="ports-actions-div">
         <div className="search-div">
-          <input type="text" placeholder="Search Ports" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search Ports"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value === "") {
+                setPorts(allPorts);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                searchPorts();
+              }
+            }}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              searchPorts(e);
+            }}
+          >
+            Search
+          </button>
         </div>
         <div className="sort-div">
           <button onClick={(e) => sortByName(e)}>Sort By Name</button>
@@ -233,7 +273,11 @@ const Ports = () => {
                     <button type="button" onClick={() => handleEditPort()}>
                       Save
                     </button>
-                    <button onClick={handleClose} className="delete_btn" type="button">
+                    <button
+                      onClick={handleClose}
+                      className="delete_btn"
+                      type="button"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -241,44 +285,51 @@ const Ports = () => {
               </div>
             </Modal.Body>
           </Modal>
-          {ports.map((port, ind) => {
-            return (
-              <div
-                style={
-                  ind % 2 === 0
-                    ? { backgroundColor: "white" }
-                    : { backgroundColor: "#efefef" }
-                }
-                className="ports-list-item"
-              >
-                <div>
-                  <p>{port.name}</p>
-                </div>
-                <div>
-                  <p>{port.country}</p>
-                </div>
-                <div>
-                  <p>{port.createdAt.substring(0, 10)}</p>
-                </div>
-                <div>
-                  <button
-                    onClick={() => handleEditShow(port)}
-                    className="port-update-btn"
+          {loaded ? (
+            <>
+              {" "}
+              {ports.map((port, ind) => {
+                return (
+                  <div
+                    style={
+                      ind % 2 === 0
+                        ? { backgroundColor: "white" }
+                        : { backgroundColor: "#efefef" }
+                    }
+                    className="ports-list-item"
                   >
-                    EDIT
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={() => handleDeletePort(port.id)}
-                    className="port-delete-btn"
-                  >
-                    DELETE
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    <div>
+                      <p>{port.name}</p>
+                    </div>
+                    <div>
+                      <p>{port.country}</p>
+                    </div>
+                    <div>
+                      <p>{port.createdAt.substring(0, 10)}</p>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => handleEditShow(port)}
+                        className="port-update-btn"
+                      >
+                        EDIT
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => handleDeletePort(port.id)}
+                        className="port-delete-btn"
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            <Loader />
+          )}
         </div>
       </div>
     </div>

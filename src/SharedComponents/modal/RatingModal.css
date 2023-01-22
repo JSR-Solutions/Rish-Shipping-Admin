@@ -1,0 +1,31 @@
+.ratings-god {
+  display: flex;
+  flex-direction: column;
+}
+.ratings-top {
+  padding-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.ratings-bot {
+  display: flex;
+  margin-top: 15px;
+  font-size: 20px;
+}
+.ratings-gog {
+  border-top: 1px solid black;
+  margin-top: 25px;
+}
+.react-rater-star.is-active {
+  display: flex;
+  flex-direction: row;
+  color:#283046 !important;
+}
+.datetime {
+  font-size: 12px;
+  margin-left: 10px;
+}
+.rater {
+  margin-top: 15px;
+}

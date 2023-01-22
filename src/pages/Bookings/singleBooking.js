@@ -1,19 +1,26 @@
-import React,{useState} from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import React,{useEffect, useState} from 'react';
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Modal, Form } from "react-bootstrap";
+
 
 function SingleBooking(props) {
   
  const params = useParams();
  const [bookingId, setBookingId] = useState(params.bookingId);
 const [bookingData, setBookingData] = useState({});
-const [isLoading, setIsLoading] = useState(true);
+const [isLoading, setIsLoading] = useState(false);
 const [link,setLink]=useState("");
+
+useEffect(()=>{
+  fetchData();
+},[]);
+
 const fetchData=()=>{
-  axios.get(`https://rish-shipping-backend-api.vercel.app/admin/api/bookings/${params.bookingId}`)
+  axios.get(`https://rish-shipping-backend-api.vercel.app/api/booking/${params.bookingId}`)
   .then((res)=>{
-    setBookingData(res.data);
+    console.log(res.data.data);
+    setBookingData(res.data.data);
+    setIsLoading(true);
   })
 }
   return (
@@ -36,28 +43,28 @@ const fetchData=()=>{
                 <p>Destination Port</p>
               </div>
               <div className="d2">
-                <p>: Chitransh</p>
-                <p>: California (IN to US) Shippers</p>
-                <p>: 12-01-2023</p>
-                <p>: 200</p>
-                <p>: &#x20B9; 44936</p>
-                <p>: Container</p>
-                <p>: Aaltu</p>
+                <p>: {bookingData.clientCompany.name}</p>
+                <p>: {bookingData.shippingCompany.name}</p>
+                <p>: {bookingData.deliveryDateRequired.substring(0, 10)}</p>
+                <p>: {bookingData.itemDimensions}</p>
+                <p>: &#x20B9; {bookingData.bookingCost}</p>
+                <p>: {bookingData.bookingType}</p>
+                <p>: {bookingData.goodsType}</p>
                 <p>
-                  : Pending{" "}
+                  : {bookingData.status}{" "}
                   <div
                     style={{
                       width: "20px",
                       height: "20px",
                       borderRadius: "50%",
-                      backgroundColor: "#FDDA0D",
+                      backgroundColor: `${bookingData.status==="Confirmed"?"lightgreen":"#FDDA0D"}`,
                       display: "inline-block",
-                      transform:"translateY(5px)"
+                      transform: "translateY(5px)",
                     }}
                   ></div>
                 </p>
-                <p>: Agra</p>
-                <p>: Ludhiana</p>
+                <p>: {bookingData.sourcePort.name}</p>
+                <p>: {bookingData.destinationPort.name}</p>
               </div>
             </div>
             <div className="details_right">
@@ -74,9 +81,9 @@ const fetchData=()=>{
                   <p>Tracking Link</p>
                 </div>
                 <div className="d2">
-                  <p>: CAL-W3uZqjAW5</p>
+                  <p>: {bookingData.pnr}</p>
                   <p>
-                    : <a href="www.google.com">www.google.com</a>
+                    : <a href={`${bookingData.trackingLink}`} target="_blank">{bookingData.trackingLink}</a>
                   </p>
                 </div>
               </div>
