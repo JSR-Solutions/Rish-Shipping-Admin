@@ -14,13 +14,15 @@ const Ports = () => {
   const [editCountry, setEditCountry] = useState("");
   const [editPort, setEditPort] = useState({});
   const [ports, setPorts] = useState([]);
+  const [delShow,setDelShow]=useState(false);
   const [allPorts,setAllPorts]=useState([]);
   const [show, setShow] = useState(false);
   const [editShow, setEditShow] = useState(false);
   const [isSortedByDate, setIsSortedByDate] = useState(false);
   const [isSortedByName, setIsSortedByName] = useState(false);
   const [reload, setReload] = useState(false);
-   const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
+  const [delId,setDelId]=useState("");
   const [loaded,setLoaded]=useState(false);
   useEffect(() => {
     getPorts();
@@ -53,6 +55,12 @@ const Ports = () => {
     setShow(true);
   }
 
+  function handleDelShow(id){
+    setDelShow(true);
+    setDelId(id);
+
+  }
+
   function handleEditShow(p) {
     setEditShow(true);
     setEditPort(p);
@@ -69,6 +77,8 @@ const Ports = () => {
     setName("");
     setEditName("");
     setEditPort({});
+    setDelShow(false);
+    setDelId("");
   }
 
   function handleChange(e) {
@@ -229,6 +239,32 @@ const Ports = () => {
           </div>
         </Modal.Body>
       </Modal>
+      <Modal show={delShow} onHide={handleClose}>
+        <Modal.Header closeButton>
+          Do you want to delete this port?
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              width: "50%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <button
+              className="port-delete-btn"
+              onClick={() => handleDeletePort(delId)}
+            >
+              Delete
+            </button>
+            <button className="port-update-btn" onClick={handleClose}>
+              Cancel
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
       <div className="ports-list-div">
         <div className="ports-list-header">
           <div>
@@ -317,7 +353,7 @@ const Ports = () => {
                     </div>
                     <div>
                       <button
-                        onClick={() => handleDeletePort(port.id)}
+                        onClick={() => handleDelShow(port.id)}
                         className="port-delete-btn"
                       >
                         DELETE
