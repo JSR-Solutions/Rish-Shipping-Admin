@@ -10,12 +10,12 @@ import { toast } from "react-toastify";
 
 import "./forms.css";
 
-const Bookings = () => {
+const Forms = () => {
   let navigate = useNavigate();
   const [forms, setForms] = useState([]);
   const [allForms, setAllForms] = useState([]);
   const [status, setStatus] = useState("ENQUIRY");
-  const [show, setModalShow] = useState(false);
+  const [show, setShow] = useState(false);
   const [confirmationStatus, setConfirmationStatus] = useState(false);
   const [link, setLink] = useState("");
   const [booking, setBooking] = useState();
@@ -44,37 +44,18 @@ const Bookings = () => {
   };
 
   const handleClose = () => {
-    setModalShow(false);
+    setShow(false);
     setConfirmationStatus(false);
   };
 
   const handleButtonClick = (e, booking) => {
     if (status === "Pending") {
-      setModalShow(true);
+      setShow(true);
       setForms(booking);
     }
   };
 
-  const approveBooking = async (e) => {
-    e.preventDefault();
-    try {
-      await axios({
-        method: "PATCH",
-        url: `https://rish-shipping-backend-api.vercel.app/admin/api/booking/approve/${booking._id}`,
-        data: {
-          trackingLink: link,
-        },
-      });
-
-      setBooking();
-      setModalShow(false);
-      fetchForms();
-      setLink("");
-      setConfirmationStatus(false);
-    } catch (error) {
-      toast(error.message);
-    }
-  };
+  
 
   const searchBookings = (e) => {
     const filteredForms = [];
@@ -150,46 +131,10 @@ const Bookings = () => {
       <div className="bookings-actions-div">
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <h3>Confirmation</h3>
+            <h3>Form Details</h3>
           </Modal.Header>
           <Modal.Body>
-            {confirmationStatus ? (
-              <div>
-                <input
-                  className="input_link"
-                  value={link}
-                  name="link"
-                  placeholder="Enter the Link"
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setLink(e.target.value);
-                  }}
-                ></input>
-                <div className="confirmation_btns">
-                  <button className="yes_btn" onClick={approveBooking}>
-                    Approve
-                  </button>
-                  <button onClick={handleClose} className="cancel_btn">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <p>Are you sure you want to confirm this booking?</p>
-                <div className="confirmation_btns">
-                  <button
-                    onClick={() => setConfirmationStatus(true)}
-                    className="yes_btn"
-                  >
-                    Yes
-                  </button>
-                  <button onClick={handleClose} className="cancel_btn">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
+            
           </Modal.Body>
         </Modal>
 
@@ -242,7 +187,7 @@ const Bookings = () => {
           >
             Partner
           </button>
-          
+
           {/*<button
             className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
@@ -265,22 +210,19 @@ const Bookings = () => {
         </div>
         <div className="bookings-list-header">
           <div>
-            <p>Company</p>
+            <p>Name</p>
           </div>
           <div>
-            <p>Shipper</p>
+            <p>Phone Number</p>
           </div>
           <div>
-            <p>Date Requested</p>
+            <p>Received At</p>
           </div>
           <div>
-            <p>Source Port</p>
+            <p>Country</p>
           </div>
           <div>
-            <p>Destination Port</p>
-          </div>
-          <div>
-            <p>Amount</p>
+            <p>Email</p>
           </div>
           <div>
             <p>View</p>
@@ -289,7 +231,7 @@ const Bookings = () => {
         <div className="bookings-list-items-div">
           {loaded ? (
             <>
-              {forms.map((booking, ind) => {
+              {forms.map((form, ind) => {
                 return (
                   <div
                     style={
@@ -300,26 +242,24 @@ const Bookings = () => {
                     className="bookings-list-item"
                   >
                     <div>
-                      <p>{booking.clientCompany.name}</p>
+                      <p>{form.name}</p>
                     </div>
                     <div>
-                      <p>{booking.shippingCompany.name}</p>
+                      <p>{form.phoneNumber}</p>
                     </div>
                     <div>
-                      <p>{booking.createdAt.substring(0, 10)}</p>
+                      <p>{form.createdAt.substring(0, 10)}</p>
                     </div>
                     <div>
-                      <p>{booking.sourcePort.name}</p>
+                      <p>{form.email}</p>
                     </div>
                     <div>
-                      <p>{booking.destinationPort.name}</p>
+                      <p>{form.country}</p>
                     </div>
-                    <div>
-                      <p>{booking.bookingCost}</p>
-                    </div>
+                    
                     <div>
                       <button
-                        onClick={() => navigate(`/bookings/${booking._id}`)}
+                        onClick={() => setShow(true)}
                         className="booking-view-btn"
                       >
                         VIEW
@@ -338,4 +278,4 @@ const Bookings = () => {
   );
 };
 
-export default Bookings;
+export default Forms;
