@@ -182,18 +182,6 @@
   border-radius: 6px;
   transition: 0.2s ease;
 }
-.activeee{
-  color: white;
-  background-color: #283046;
-  border: 1px solid #283046;
-  min-width: 160px;
-  padding:5px 10px;
-  font-size: 14px;
-  font-family: "Montserrat";
-  font-weight: bold;
-  border-radius: 6px;
-  transition: 0.2s ease;
-}
 .activee1{
 color: white;
   background-color: #FDDA0D;

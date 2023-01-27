@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../../Assets/logo.svg";
 import "./Sidebar.css";
 import { HiMenu, HiOutlineTicket } from "react-icons/hi";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineForm } from "react-icons/ai";
 import { RiShipLine, RiLogoutCircleLine } from "react-icons/ri";
 import { MdShareLocation } from "react-icons/md";
 import { CgOrganisation } from "react-icons/cg";
@@ -82,6 +82,16 @@ const SideBar = () => {
           >
             <HiOutlineTicket className="sidebar-menu-item-icon" />
             <p>Bookings</p>
+          </div>
+        </Link>
+        <Link className="sidebar-link" to={"/forms"}>
+          <div
+            className={`sidebar-menu-item ${
+              useActive("/forms") && "active"
+            }`}
+          >
+            <AiOutlineForm className="sidebar-menu-item-icon" />
+            <p>Forms</p>
           </div>
         </Link>
         <hr />

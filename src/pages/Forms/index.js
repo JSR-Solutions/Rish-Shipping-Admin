@@ -8,40 +8,38 @@ import { toast } from "react-toastify";
 
 // import { search } from "../../utils/helpers";
 
-import "./Bookings.css";
+import "./forms.css";
 
 const Bookings = () => {
-  let navigate=useNavigate();
-  const [bookings, setBookings] = useState([]);
-  const [allBookings, setAllBookings] = useState([]);
-  const [status, setStatus] = useState("Confirmed");
+  let navigate = useNavigate();
+  const [forms, setForms] = useState([]);
+  const [allForms, setAllForms] = useState([]);
+  const [status, setStatus] = useState("ENQUIRY");
   const [show, setModalShow] = useState(false);
   const [confirmationStatus, setConfirmationStatus] = useState(false);
   const [link, setLink] = useState("");
   const [booking, setBooking] = useState();
-  const [loaded,setLoaded]=useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [query, setQuery] = useState("");
-    const [isSortedByDate, setIsSortedByDate] = useState(false);
-    const [isSortedByCompanyName, setIsSortedByCompanyName] = useState(false);
-    const [isSortedByShipperName, setIsSortedByShipperName] = useState(false);
-const [isSortedByAmount,setIsSortedByAmount]=useState(false);
+  const [isSortedByDate, setIsSortedByDate] = useState(false);
+  const [isSortedByCompanyName, setIsSortedByCompanyName] = useState(false);
+  const [isSortedByShipperName, setIsSortedByShipperName] = useState(false);
+  const [isSortedByAmount, setIsSortedByAmount] = useState(false);
   useEffect(() => {
-    fetchBookings();
+    fetchForms();
   }, [status]);
 
-  const fetchBookings = async () => {
+  const fetchForms = async () => {
     try {
-      const bookingResponse = await axios({
-        method: "POST",
-        url: "https://rish-shipping-backend-api.vercel.app/admin/api/booking/",
-        data: {
-          status: status,
-        },
+      const formResponse = await axios({
+        method: "GET",
+        url: `https://rish-shipping-backend-api.vercel.app/api/forms/${status}`,
+       
       });
-      setBookings(bookingResponse.data.data);
-      setAllBookings(bookingResponse.data.data);
+      setForms(formResponse.data.data);
+      setAllForms(formResponse.data.data);
       setLoaded(true);
-      console.log(bookings);
+      console.log(forms);
     } catch (error) {}
   };
 
@@ -53,7 +51,7 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
   const handleButtonClick = (e, booking) => {
     if (status === "Pending") {
       setModalShow(true);
-      setBooking(booking);
+      setForms(booking);
     }
   };
 
@@ -70,7 +68,7 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
 
       setBooking();
       setModalShow(false);
-      fetchBookings();
+      fetchForms();
       setLink("");
       setConfirmationStatus(false);
     } catch (error) {
@@ -79,69 +77,73 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
   };
 
   const searchBookings = (e) => {
-    const filteredBookings = [];
-    for (const booking of allBookings) {
+    const filteredForms = [];
+    for (const form of allForms) {
       if (
-        booking.clientCompany.name.toLowerCase().includes(query.toLowerCase())
+        form.clientCompany.name.toLowerCase().includes(query.toLowerCase())
       ) {
-        filteredBookings.push(booking);
+        filteredForms.push(form);
       }
     }
 
-    setBookings(filteredBookings);
+    setForms(filteredForms);
   };
-   function sortByCompanyName(e) {
-     e.preventDefault();
-     console.log("sorting");
-     let temparr = [...bookings];
-     temparr.sort((a, b) =>
-       isSortedByCompanyName
-         ? b.clientCompany.name.toString().localeCompare(a.clientCompany.name.toString())
-         : a.clientCompany.name.toString().localeCompare(b.clientCompany.name.toString())
-     );
-     setBookings(temparr);
-     setIsSortedByCompanyName(!isSortedByCompanyName);
-   }
-   function sortByShipperName(e) {
-     e.preventDefault();
-     console.log("sorting");
-     let temparr = [...bookings];
-     temparr.sort((a, b) =>
-       isSortedByShipperName
-         ? b.shippingCompany.name
-             .toString()
-             .localeCompare(a.shippingCompany.name.toString())
-         : a.shippingCompany.name
-             .toString()
-             .localeCompare(b.shippingCompany.name.toString())
-     );
-     setBookings(temparr);
-     setIsSortedByShipperName(!isSortedByShipperName);
-   }
-
-   function sortByDate(e) {
-     e.preventDefault();
-     console.log("sorting");
-     let temparr = [...bookings];
-     temparr.sort((a, b) =>
-       isSortedByDate
-         ? new Date(a.deliveryDateRequired) - new Date(b.createdAt)
-         : new Date(b.deliveryDateRequired) - new Date(a.createdAt)
-     );
-     setIsSortedByDate(!isSortedByDate);
-     setBookings(temparr);
-   }
-   function sortByAmount(e){
+  function sortByCompanyName(e) {
     e.preventDefault();
-    let temparr=[...bookings];
-    temparr.sort((a,b)=>
-    isSortedByAmount?
-    a.bookingCost-b.bookingCost:
-    b.bookingCost-a.bookingCost
+    console.log("sorting");
+    let temparr = [...forms];
+    temparr.sort((a, b) =>
+      isSortedByCompanyName
+        ? b.clientCompany.name
+            .toString()
+            .localeCompare(a.clientCompany.name.toString())
+        : a.clientCompany.name
+            .toString()
+            .localeCompare(b.clientCompany.name.toString())
+    );
+    setForms(temparr);
+    setIsSortedByCompanyName(!isSortedByCompanyName);
+  }
+  function sortByShipperName(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...forms];
+    temparr.sort((a, b) =>
+      isSortedByShipperName
+        ? b.shippingCompany.name
+            .toString()
+            .localeCompare(a.shippingCompany.name.toString())
+        : a.shippingCompany.name
+            .toString()
+            .localeCompare(b.shippingCompany.name.toString())
+    );
+    setForms(temparr);
+    setIsSortedByShipperName(!isSortedByShipperName);
+  }
+
+  function sortByDate(e) {
+    e.preventDefault();
+    console.log("sorting");
+    let temparr = [...forms];
+    temparr.sort((a, b) =>
+      isSortedByDate
+        ? new Date(a.deliveryDateRequired) - new Date(b.createdAt)
+        : new Date(b.deliveryDateRequired) - new Date(a.createdAt)
+    );
+    setIsSortedByDate(!isSortedByDate);
+    setForms(temparr);
+  }
+  function sortByAmount(e) {
+    e.preventDefault();
+    let temparr = [...forms];
+    temparr.sort((a, b) =>
+      isSortedByAmount
+        ? a.bookingCost - b.bookingCost
+        : b.bookingCost - a.bookingCost
     );
     setIsSortedByAmount(!isSortedByAmount);
-    setBookings(temparr);
-   }
+    setForms(temparr);
+  }
 
   return (
     <div className="bookings-parent-div">
@@ -199,7 +201,7 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
             onChange={(e) => {
               setQuery(e.target.value);
               if (e.target.value === "") {
-                setBookings(allBookings);
+                setForms(allForms);
               }
             }}
             onKeyDown={(e) => {
@@ -229,29 +231,18 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
       <div className="bookings-list-div">
         <div className="status-div">
           <button
-            className={status === "Completed" ? "activee" : "status-tab-btn"}
-            onClick={() => setStatus("Completed")}
+            className={status === "ENQUIRY" ? "activeee" : "status-tab-btn"}
+            onClick={() => setStatus("ENQUIRY")}
           >
-            Completed
+            Enquiry
           </button>
           <button
-            className={status === "Confirmed" ? "activee" : "status-tab-btn"}
-            onClick={() => setStatus("Confirmed")}
+            className={status === "PARTNER" ? "activeee" : "status-tab-btn"}
+            onClick={() => setStatus("PARTNER")}
           >
-            Confirmed
+            Partner
           </button>
-          <button
-            className={status === "Pending" ? "activee1" : "status-tab-btn"}
-            onClick={() => setStatus("Pending")}
-          >
-            Pending
-          </button>
-          <button
-            className={status === "Cancelled" ? "activee2 " : "status-tab-btn"}
-            onClick={() => setStatus("Cancelled")}
-          >
-            Cancelled
-          </button>
+          
           {/*<button
             className={status === "In Transit" ? "activee" : "status-tab-btn"}
             onClick={() => setStatus("In Transit")}
@@ -270,7 +261,7 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
           >
             Rejected
             </button>*/}
-          <div style={{ width: "40%" }}> </div>
+          <div style={{ width: "70%" }}> </div>
         </div>
         <div className="bookings-list-header">
           <div>
@@ -298,7 +289,7 @@ const [isSortedByAmount,setIsSortedByAmount]=useState(false);
         <div className="bookings-list-items-div">
           {loaded ? (
             <>
-              {bookings.map((booking, ind) => {
+              {forms.map((booking, ind) => {
                 return (
                   <div
                     style={
