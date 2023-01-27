@@ -339,25 +339,34 @@ function SingleShipper(props) {
                 </Modal.Body>
               </Modal>
               <h3> Shipper Details</h3>
-              <div style={{display:"flex",position:"relative"}}>
-              <div className="d1">
-                <p>Name</p>
-                <p>Address</p>
-                <p>Contact No</p>
-                <p>Website</p>
-                <p>Email</p>
-                <p>Category</p>
-              </div>
-              <div className="d2">
-                <p>: {shipperData.name}</p>
-                <p>: {shipperData.address}</p>
-                <p>: {shipperData.contactNo}</p>
-                <p>: {shipperData.website}</p>
-                <p>: {shipperData.email}</p>
-                <p>: {shipperData.category.name}</p>
-              </div>
-              <RatingsModal show={ratingShow} onHide={handleClose} shipper={params.shipperId}/>
-              <button className="rating_button" onClick={()=>setRatingShow(true)}>View Ratings</button>
+              <div style={{ display: "flex", position: "relative" }}>
+                <div className="d1">
+                  <p>Name</p>
+                  <p>Address</p>
+                  <p>Contact No</p>
+                  <p>Website</p>
+                  <p>Email</p>
+                  <p>Category</p>
+                </div>
+                <div className="d2">
+                  <p>: {shipperData.name}</p>
+                  <p>: {shipperData.address}</p>
+                  <p>: {shipperData.contactNo}</p>
+                  <p>: {shipperData.website}</p>
+                  <p>: {shipperData.email}</p>
+                  <p>: {shipperData.category.name}</p>
+                </div>
+                <RatingsModal
+                  show={ratingShow}
+                  onHide={handleClose}
+                  shipper={params.shipperId}
+                />
+                <button
+                  className="rating_button"
+                  onClick={() => setRatingShow(true)}
+                >
+                  View Ratings
+                </button>
               </div>
             </div>
             <div className="details_right">
@@ -429,16 +438,34 @@ function SingleShipper(props) {
                           <Form.Label className="mt-3">To</Form.Label>
                           <Form.Select
                             name="secondField"
-                            value="secondField"
+                            value={secondField}
                             onChange={handleChange}
                           >
-                            <option value="Asia">Asia</option>
-                            <option value="Africa">Africa</option>
-                            <option value="North America">North America</option>
-                            <option value="South America">South America</option>
-                            <option value="Antartica">Antartica</option>
-                            <option value="Europe">Europe</option>
-                            <option value="Australia">Australia</option>
+                            {firstField !== "Asia" ? (
+                              <option value="Asia">Asia</option>
+                            ) : null}
+                            {firstField !== "Africa" ? (
+                              <option value="Africa">Africa</option>
+                            ) : null}
+                            {firstField !== "North America" ? (
+                              <option value="North America">
+                                North America
+                              </option>
+                            ) : null}
+                            {firstField !== "South America" ? (
+                              <option value="South America">
+                                South America
+                              </option>
+                            ) : null}
+                            {firstField !== "Antarctica" ? (
+                              <option value="Antartica">Antartica</option>
+                            ) : null}
+                            {firstField !== "Europe" ? (
+                              <option value="Europe">Europe</option>
+                            ) : null}
+                            {firstField !== "Australia" ? (
+                              <option value="Australia">Australia</option>
+                            ) : null}
                           </Form.Select>
                           <Form.Label className="mt-3">
                             Cost Per Unit
